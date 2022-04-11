@@ -26,7 +26,7 @@ Your beloved racecar that you've spent three months bonding with has been transp
 - The only moving agents seem to be autonomous racecars!
 You've heard that there's a portal back to Earth at the end of the Rainbow Road outside of the city, but the RACECAR Em-tire has demanded that your car participate in a race for the entertainment of the populace before it is to be allowed to leave the city gates. Moreover, once your racecar leaves the racetrack arena, it must drive safely through the city to get to the Rainbow Road or else the Em-tire will get angry and keep your car hostage (apparently, they're particular about the stop signs!).
 
-Luckily, you're aimed with your knowledge from RSS and a good SSH connection! Let's get your racecar back home to MIT!
+Luckily, you're armed with your knowledge from RSS and a good SSH connection! Let's get your racecar back home to MIT!
 
 ## Grading
 
