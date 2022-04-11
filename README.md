@@ -139,8 +139,10 @@ The configuration of the final MiniCity is not known until Race Day (the Em-tire
 
 Your job, after finishing your race successfully, to drive from the start of the course out of the city and through the Rainbow Road (part C). The roads are conveniently marked with an orange line down the center. However, you have been warned that stop signs must be observed and the car must come to a full stop or else the Em-tire will get angry! Other road signs, however, you may not stop at and will be penalized for doing so. For some reason, there are also a large number of red bricks lying around the city--be careful your car does not recognize these as stop signs; otherwise, you might not get out in time!
 
-*TODO: add pictures*
-The Em-tire, in their infinite wisdom and with their love of buzz words, has already created a ~machine learning~ based stop sign detector for you! It not only tells you if there's a stop sign, but where in your image the stop sign is (nifty!). If you don't use it, the Em-tire will be mad that their hard work went to waste, but you are free to modify the code for the detector and add higher level logic to take advantage of it.
+<!-- <img src="media/final_race.PNG" width="300" /> -->
+<img src="media/city_driving.png" width="400" />
+
+The Em-tire, in their infinite wisdom and with their love of buzz words, has already created a ~ machine learning ~ based stop sign detector for you! It not only tells you if there's a stop sign, but where in your image the stop sign is (nifty!). If you don't use it, the Em-tire will be mad that their hard work went to waste, but you are free to modify the code for the detector and add higher level logic to take advantage of it.
 
 Of course, you are to avoid crashing into buildings as well. Somewhere in the city there is also a car wash; you've heard that going through the car wash might save you some time (and provide a bonus as the Em-tire values cleanliness), though it seems that your car's LIDAR will not work inside...
 
