@@ -239,6 +239,7 @@ Here are some things you may consider in developing your approach:
 - Remember to use Colab's GPU backend. It speeds up training a LOT. `Runtime > Change Runtime Type > Hardware Accelerator > GPU` on Colab.
 - We expect the neural net to be imperfect. It may label some offroad parts as being road. Thus, you may want to use contractions and dilations to get rid of those outliers, like with color segmentation in lab 4. If even that does not get rid of the outliers, then use the largest continuous patch of `1`s in the mask as road (akin to using the largest contour in lab 4).
   - Likewise, you can ignore any patches labelled as road that are too high up in the image (e.g. are background objects or on the ceiling or something).
+  - Another way to deal with outliers is to use the softmax function on your neural net's output (so that each patch has a probability of being road). Then, only look at patches with more than some threshold probability (e.g. 80%) of being road, rather than 50% (which is what happens when you use `torch.argmax`).
 
 ## General Notes
 
