@@ -163,7 +163,7 @@ Here are some things you may consider in developing your approach:
 As always, your safety controller should be turned on for this portion of the Final Challenge as well, although the city will not damage the car should you collide with anything.
 
 ## Part C: Rainbow Road [EXTRA CREDIT]
-
+** currently a work-in-progress; updates will be made to these instructions**
 
 ### Environment and Task
 
