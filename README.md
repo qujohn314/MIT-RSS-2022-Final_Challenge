@@ -63,7 +63,7 @@ And `num_collisions` is the number of times the car collides with anything in th
 
 As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this ~15 meter course, you will need to cover an average of around .5 m/s (but this value will be calibrated by our staff solution completion speed).
 
-### Part C: Rainbow Road [BONUS]
+### Part C: Rainbow Road [EXTRA CREDIT]
 
 Part C can add an additional 10% to your Final Challenge technical grade! Your grade will be calculated based on the number of `penalties` you incur as follows:
 
@@ -142,7 +142,7 @@ Your job, after finishing your race successfully, to drive from the start of the
 <!-- <img src="media/final_race.PNG" width="300" /> -->
 <img src="media/city_driving.png" width="400" />
 
-The Em-tire, in their infinite wisdom and with their love of buzz words, has already created a ~ machine learning ~ based stop sign detector for you! It not only tells you if there's a stop sign, but where in your image the stop sign is (nifty!). If you don't use it, the Em-tire will be mad that their hard work went to waste, but you are free to modify the code for the detector and add higher level logic to take advantage of it.
+The Em-tire, in their infinite wisdom and with their love of buzz words, has already created a ~ machine learning ~ based stop sign detector for you (located in /city_driving)! It not only tells you if there's a stop sign, but where in your image the stop sign is (nifty!). If you don't use it, the Em-tire will be mad that their hard work went to waste, but you are free to modify the code for the detector and add higher level logic to take advantage of it.
 
 Of course, you are to avoid crashing into buildings as well. Somewhere in the city there is also a car wash; you've heard that going through the car wash might save you some time (and provide a bonus as the Em-tire values cleanliness), though it seems that your car's LIDAR will not work inside...
 
