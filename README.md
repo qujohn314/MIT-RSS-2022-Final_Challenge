@@ -1,10 +1,9 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Race Day | Friday, April 29th at 10:00AM EDT |
-| Code Pushed to Github  | Friday, May 6th at 11:59PM EDT |
-| Briefing (15 min presentation + 5 min Q&A)([github pages](https://github.mit.edu/rss/website2021)) | Wednesday, May 4th at 1:00PM EDT |
-| Report ([github pages](https://github.mit.edu/rss/website2021)) | Monday, May 9th at 1:00PM EDT |
-| [Team Member Assessment](https://forms.gle/5npgrmk8mjdRGGcL7)  | Monday, May 9th at 1:00PM EDT |
+| Race Day | TBA |
+| Code Pushed to Github  | TBA |
+| Briefing (15 min presentation + 5 min Q&A) OR Report ([github pages](https://github.mit.edu/rss/website2021)) | TBA |
+| [Team Member Assessment](https://forms.gle/5npgrmk8mjdRGGcL7)  | TBA|
 
 # Final Challenge 2022
 
@@ -32,14 +31,13 @@ Luckily, you're armed with your knowledge from RSS and a good SSH connection! Le
 
 | Deliverable  Grade | Weighting             |
 |---------------|----------------------------------------------------------------------------|
-| Part A: Final Race (out of 100)  | 30% |
-| Part B: City Driving  | 15% |
-| Part C: Rainbow Road  | 15% |
-| Briefing Grade (out of 10) | 10% |
-| Report Grade (out of 10) | 30% |
+| Part A: Final Race (out of 100)  | 35% |
+| Part B: City Driving  | 25% |
+| Part C: Rainbow Road [BONUS]  | 10% |
+| Briefing OR Report Grade (out of 10) | 40% |
 
 ### Part A: Final Race
-Part A is worth 30% of your Final Challenge technical grade. Your grade will be calculated based on the time your car takes to drive around the track (`best_race_split`, in seconds) as follows:
+Part A is worth 35% of your Final Challenge technical grade. Your grade will be calculated based on the time your car takes to drive around the track (`best_race_split`, in seconds) as follows:
 
   `Part A grade = min(100 + (50 - best_race_split), 110)  - penalties`
 
@@ -53,31 +51,33 @@ As you can see from this grading scheme, it is possible to receive bonus points 
 
 ### Part B: City Driving
 
-Part B is worth 15% of your Final Challenge technical grade. Your grade will be calculated based on timed completion through the course (`best_city_time`, in seconds) and the number of `penalties` you incur as follows:
+Part B is worth 25% of your Final Challenge technical grade. Your grade will be calculated based on timed completion through the course (`best_city_time`, in seconds) and the number of `penalties` you incur as follows:
 
-`Part B grade = min(100 + (20 - best_city_time), 110) - penalties + car_wash`
+`Part B grade = min(100 + staff_multiplier * (30 - best_city_time), 110) - penalties + car_wash`
 
-Where `car_wash` is a possible 5 points if your car drives through the car wash and 0 points otherwise, and `penalties` is calculated as follows:
+Where `staff_multiplier` is a calibrating constant based off of the staff solution (TBA), `car_wash` is a possible 5 points if your car drives through the car wash and 0 points otherwise, and `penalties` is calculated as follows:
 
 `penalties = 5 * num_collisions + 10 * traffic_infractions + 10 * manual_assist`
 
 And `num_collisions` is the number of times the car collides with anything in the city (ie. buildings, bricks, road signs), `traffic_infractions` is the number of times the car passes a stop sign without stopping for the correct duration or stops at a non-stop sign, and `manual_assist` is the number of maneuvers (counted individually for turning a corner, stopping at a stop sign, resetting a car, etc.) that required manual teleop intervention.
 
-As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1.5 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this < 20 meter course, you will need to cover an average of at most 1 m/s. 
+As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this ~15 meter course, you will need to cover an average of around .5 m/s (but this value will be calibrated by our staff solution completion speed).
 
-### Part C: Rainbow Road
+### Part C: Rainbow Road [BONUS]
 
-Part C is worth 15% of your Final Challenge technical grade. Your grade will be calculated based on the number of `penalties` you incur as follows:
+Part C can add an additional 10% to your Final Challenge technical grade! Your grade will be calculated based on the number of `penalties` you incur as follows:
 
-`Part C grade = min(100 + 2 * (5 - best_race_split), 110)  - penalties`
+`Part C grade = min(100 + 2 * staff_multiplier * (5 - best_race_split), 110)  - penalties`
 
-Where `penalties` is calculated as follows:
+Where `staff_multiplier` is a calibrating constant based off of the staff solution (TBA) and `penalties` is calculated as follows:
 
   `penalties = 5 * num_lane_line_breaches + 5 * num_long_breaches`
   
 And `num_lane_line_breaches` is the number of times the car drives outside of the Rainbow Road, and `num_long_breaches` is the number of times the car has driven outside of the road and stayed outside of the lane for greater than 3 seconds.
 
-The **maximum speed of your car should be 2 m/s**. 
+The **maximum speed of your car should be 1.5 m/s**. 
+
+**Your team will choose between completing a final briefing or report (you do not need to complete both).**
 
 ### Briefing Evaluation (see [technical briefing rubric](https://docs.google.com/document/d/1NmqQP7n1omI9bIshF1Y-MP70gfDkgEeoMjpWv8hjfsY/edit?usp=sharing) for grading details)
 When grading the Technical approach and Experimental evaluation portions of your briefing, we will be looking specifically for **illustrative videos of your car following the track lane and Rainbow Road as well as executing city driving maneuvers.** Specifically, we would like videos highlighting:
@@ -139,8 +139,10 @@ The configuration of the final MiniCity is not known until Race Day (the Em-tire
 
 Your job, after finishing your race successfully, to drive from the start of the course out of the city and through the Rainbow Road (part C). The roads are conveniently marked with an orange line down the center. However, you have been warned that stop signs must be observed and the car must come to a full stop or else the Em-tire will get angry! Other road signs, however, you may not stop at and will be penalized for doing so. For some reason, there are also a large number of red bricks lying around the city--be careful your car does not recognize these as stop signs; otherwise, you might not get out in time!
 
-*TODO: add pictures*
-The Em-tire, in their infinite wisdom and with their love of buzz words, has already created a ~machine learning~ based stop sign detector for you! It not only tells you if there's a stop sign, but where in your image the stop sign is (nifty!). If you don't use it, the Em-tire will be mad that their hard work went to waste, but you are free to modify the code for the detector and add higher level logic to take advantage of it.
+<!-- <img src="media/final_race.PNG" width="300" /> -->
+<img src="media/city_driving.png" width="400" />
+
+The Em-tire, in their infinite wisdom and with their love of buzz words, has already created a ~ machine learning ~ based stop sign detector for you! It not only tells you if there's a stop sign, but where in your image the stop sign is (nifty!). If you don't use it, the Em-tire will be mad that their hard work went to waste, but you are free to modify the code for the detector and add higher level logic to take advantage of it.
 
 Of course, you are to avoid crashing into buildings as well. Somewhere in the city there is also a car wash; you've heard that going through the car wash might save you some time (and provide a bonus as the Em-tire values cleanliness), though it seems that your car's LIDAR will not work inside...
 
@@ -160,8 +162,8 @@ Here are some things you may consider in developing your approach:
 
 As always, your safety controller should be turned on for this portion of the Final Challenge as well, although the city will not damage the car should you collide with anything.
 
-## Part C: Rainbow Road
-
+## Part C: Rainbow Road [EXTRA CREDIT]
+** currently a work-in-progress; updates will be made to these instructions**
 
 ### Environment and Task
 
@@ -237,6 +239,7 @@ Here are some things you may consider in developing your approach:
 - Remember to use Colab's GPU backend. It speeds up training a LOT. `Runtime > Change Runtime Type > Hardware Accelerator > GPU` on Colab.
 - We expect the neural net to be imperfect. It may label some offroad parts as being road. Thus, you may want to use contractions and dilations to get rid of those outliers, like with color segmentation in lab 4. If even that does not get rid of the outliers, then use the largest continuous patch of `1`s in the mask as road (akin to using the largest contour in lab 4).
   - Likewise, you can ignore any patches labelled as road that are too high up in the image (e.g. are background objects or on the ceiling or something).
+  - Another way to deal with outliers is to use the softmax function on your neural net's output (so that each patch has a probability of being road). Then, only look at patches with more than some threshold probability (e.g. 80%) of being road, rather than 50% (which is what happens when you use `torch.argmax`).
 
 ## General Notes
 
@@ -259,9 +262,7 @@ Note that this does not change the max speed of the joystick. If you want the jo
 
 ### Machine Learning Integration
 
-You will be using Google Colab to train the model for Part C. All of the infrastructure to train your model is already provided for you; your job is to collect a rosbag of the road, annotate it, and customize the design of the network you train. More details can be found in *place with instructions for doing Part C* 
-
-At present, running the machine learning models for the final challenge will need to happen off-robot. If one of your team members has been connecting to the robot via a native Linux or Windows OS, the steps to set up the proper environment can be found in *add file and path*. If not, you will need to use a course laptop during lab hours to integrate your model code with your robot. *This means you must come to lab with the code you want to test already written*. You can, however, develop code and test your models outside of lab using the provided Google Colabs and images extracted from your own recorded rosbags. 
+At present, running the machine learning models for the final challenge will need to happen off-robot. If one of your team members has been connecting to the robot via a native Linux or Windows OS, the steps to set up the proper environment and network with the robot can be found in the docs folder. If not, you will need to use a course laptop during lab hours to integrate your model code with your robot. *This means you must come to lab with the code you want to test already written*. You can, however, develop code and test your models outside of lab using the Google Colabs and images extracted from your own recorded rosbags. 
 
 ## FAQ
 
