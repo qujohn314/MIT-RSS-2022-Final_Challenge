@@ -167,8 +167,24 @@ As always, your safety controller should be turned on for this portion of the Fi
 
 You've almost made it back home! The last thing to do is to drive through the outskirts of the city back to the portal that leads to MIT along the Rainbow Road. More hacked images have been leaked... but why is the road so colorful?! You can definitely tell where the road is, but your car will get confused if you stick to color segmentation for sure. Legend has it that the surrounding flower field (the infamous Marigold Karpet) is poisonous to racecars, and there are no invincibility stars to be found!
 
-*TODO: add rainbow road ML instructions*
+Lucky for you, your car has been in this treacherous flower field before, and, in fact, has unobstructed access to it before race day! Not only that, your car also has some Expert Road Recognizers (your team) to help learn what is safe road to drive on and what is horrible, allergy-causing plant-life!
 
+For this task, you will design and train your very own simple neural network to help identify the road. To do this, you will do the following high-level steps:
+
+- Drive around the Marigold Karpet track, recording your car's camera feed in a rosbag.
+- Extract a bunch of individual images from the rosbag.
+- Annotate each of the images, clicking a polygonal bounding box to segment out the road.
+  - This breaks up the image into patches or gridcells of a specified size. Any patch within the polygon you specify will be considered "road," all others are not.
+  - The annotations are saved as numpy arrays of size `[height of image // height of patch, width of image // width of patch]`, representing binary masks where `1`s denote road.
+- Upload your images and corresponding annotations to Google Drive
+- Fill in a neural network architecture in a given Colab notebook
+  - The neural network breaks the image into patches (as the annotation code does) and, for each patch, predicts whether it is road or not. This gives a low-resolution road
+  segmentation that can be used for path following.
+- Tune the hyperparameters of the neural network
+- Train and re-tune as needed
+- Download the saved weights of the neural network onto your car
+- Run the inference-time code to load up the weights, subscribe to your camera, and output a binary mask of where the road is.
+- Use this for line-following.
 
 ### Race Day
 
