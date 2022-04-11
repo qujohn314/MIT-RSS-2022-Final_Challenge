@@ -63,7 +63,7 @@ Where `car_wash` is a possible 5 points if your car drives through the car wash 
 
 And `num_collisions` is the number of times the car collides with anything in the city (ie. buildings, bricks, road signs), `traffic_infractions` is the number of times the car passes a stop sign without stopping for the correct duration or stops at a non-stop sign, and `manual_assist` is the number of maneuvers (counted individually for turning a corner, stopping at a stop sign, resetting a car, etc.) that required manual teleop intervention.
 
-As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 2 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this < 20 meter course, you will need to cover an average of at most 1 m/s. 
+As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1.5 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this < 20 meter course, you will need to cover an average of at most 1 m/s. 
 
 ### Part C: Rainbow Road
 
@@ -84,7 +84,7 @@ When grading the Technical approach and Experimental evaluation portions of your
 - Visualization of lane / marker tracking and stable drive control within a lane
 - Stopping at stop signs and making turns through the course
 - Recovery of your car if it is outside of its assigned track lane
-- Segmentation using machine learning of the Rainbow Road against Marigold Kart
+- Segmentation using machine learning of the Rainbow Road against Marigold Karpet
 
 ### Report Evaluation (see [technical report rubric](https://docs.google.com/document/d/1B6l7vKJFN3CPPcMn8cKKArHUU_Bq_YUZ5KxKoP6qMk0/edit?usp=sharing) for grading details)
 When grading the Technical approach and Experimental evaluation portions of your report, we will be looking specifically for the following items:
@@ -163,7 +163,7 @@ As always, your safety controller should be turned on for this portion of the Fi
 
 ### Environment and Task
 
-You've almost made it back home! The last thing to do is to drive through the outskirts of the city back to the portal that leads to MIT along the Rainbow Road. More hacked images have been leaked... but why is the road so colorful?! You can definitely tell where the road is, but your car will get confused if you stick to color segmentation for sure. Legend has it that the surrounding flower field (the infamous Marigold Kart) is poisonous to racecars, and there are no invincibility stars to be found!
+You've almost made it back home! The last thing to do is to drive through the outskirts of the city back to the portal that leads to MIT along the Rainbow Road. More hacked images have been leaked... but why is the road so colorful?! You can definitely tell where the road is, but your car will get confused if you stick to color segmentation for sure. Legend has it that the surrounding flower field (the infamous Marigold Karpet) is poisonous to racecars, and there are no invincibility stars to be found!
 
 *TODO: add rainbow road ML instructions*
 
