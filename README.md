@@ -162,7 +162,7 @@ Here are some things you may consider in developing your approach:
 
 As always, your safety controller should be turned on for this portion of the Final Challenge as well, although the city will not damage the car should you collide with anything.
 
-## Part C: Rainbow Road
+## Part C: Rainbow Road [EXTRA CREDIT]
 
 
 ### Environment and Task
@@ -262,9 +262,7 @@ Note that this does not change the max speed of the joystick. If you want the jo
 
 ### Machine Learning Integration
 
-You will be using Google Colab to train the model for Part C. All of the infrastructure to train your model is already provided for you; your job is to collect a rosbag of the road, annotate it, and customize the design of the network you train. More details can be found in *place with instructions for doing Part C* 
-
-At present, running the machine learning models for the final challenge will need to happen off-robot. If one of your team members has been connecting to the robot via a native Linux or Windows OS, the steps to set up the proper environment can be found in *add file and path*. If not, you will need to use a course laptop during lab hours to integrate your model code with your robot. *This means you must come to lab with the code you want to test already written*. You can, however, develop code and test your models outside of lab using the provided Google Colabs and images extracted from your own recorded rosbags. 
+At present, running the machine learning models for the final challenge will need to happen off-robot. If one of your team members has been connecting to the robot via a native Linux or Windows OS, the steps to set up the proper environment and network with the robot can be found in the docs folder. If not, you will need to use a course laptop during lab hours to integrate your model code with your robot. *This means you must come to lab with the code you want to test already written*. You can, however, develop code and test your models outside of lab using the Google Colabs and images extracted from your own recorded rosbags. 
 
 ## FAQ
 
