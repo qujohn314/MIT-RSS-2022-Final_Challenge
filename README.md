@@ -197,6 +197,12 @@ These speeds are measured in ERPM. The conversion factor is 4614 ERPM per m/s (t
 
 Note that this does not change the max speed of the joystick. If you want the joystick to command a higher speed change the scale parameter for drive.speed in this file: https://github.com/mit-racecar/racecar/blob/master/racecar/config/racecar-v2/joy_teleop.yaml. The scale parameter multiples the joystick output which is in the range [−1,1] to produce a speed.
 
+### Machine Learning Integration
+
+You will be using Google Colab to train the model for Part C. All of the infrastructure to train your model is already provided for you; your job is to collect a rosbag of the road, annotate it, and customize the design of the network you train. More details can be found in *place with instructions for doing Part C* 
+
+At present, running the machine learning models for the final challenge will need to happen off-robot. If one of your team members has been connecting to the robot via a native Linux or Windows OS, the steps to set up the proper environment can be found in *add file and path*. If not, you will need to use a course laptop during lab hours to integrate your model code with your robot. *This means you must come to lab with the code you want to test already written*. You can, however, develop code and test your models outside of lab using the provided Google Colabs and images extracted from your own recorded rosbags. 
+
 ## FAQ
 
 ### Part A: Final Race
