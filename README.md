@@ -186,13 +186,51 @@ For this task, you will design and train your very own simple neural network to 
 - Run the inference-time code to load up the weights, subscribe to your camera, and output a binary mask of where the road is.
 - Use this for line-following.
 
+### Specific Task Instructions
+Assuming you are in the `road_detector` directory:
+
+* Drive the car with `zed` and `teleop` with `rosbag record -O [bag file path] /zed/zed_node/rgb/image_rect_color` to record images of the track.
+    * If you have a Velodyne car, you may have already created a node that flips the image for you. Subscribe to that node instead.
+* Modify the image extraction code in the following ways:
+    * Check how many images are in the rosbag by running `rosbag info [bag file path]`.
+    * Modify `cb()` in `img_saver.py` to have the variable `total_images` equal to the number of images in the rosbag.
+    * Modify the same function to have `flip` set to `True` if camera is mounted upside down. Of course, do not do this if you subscribed to a node that does that for you in the first step. If you did subscribe to a different topic, change the topic in the subscriber initialization at the bottom.
+    * Also modify the path to the folder where extracted images are saved in `process_imgs()` (e.g. `./saved_images`).
+* Run `roscore`, `python3 img_saver.py`, and `rosbag play [bag file path]` in that order. This populates the saved images folder with images from the camera.
+* Move some of the images from that folder into `images`. These will be the images trained/validated on and that require annotation. Move some others to `testimages`. These are the images the neural net will be tested on.
+
+You've now extracted the images. On to annotations:
+
+* Modify `__utils__.py` to have the desired patch size (`H`, `W`).
+* Run `python3 annotate_imgs.py --path [path to images to annotate = ./images] --results [path to folder where annotations are saved = ./results]`
+    * Click on `n = 10` points bounding the road to create a polygon around it, thus marking all patches in those as ones on the road. Then, close the window to move on to the next image. You may need to close out a tiny menu window between images too.
+
+Now, time to build your neural net and train:
+
+* Upload a copy of `final-challenge-ml-folder` to Google Drive.
+* Upload the contents of `images`, `testimages`, `results` to the corresponding Google Drive folders within `final-challenge-ml-folder`.
+* Fill out the TODOs in `TrainNotebook.ipynb`
+* Run all the cells to train. This saves the checkpoints to `checkpoints` folder in your Drive.
+
+Finally, on to deployment of the neural net: 
+* Download whatever weights you saved in `checkpoints` that you would like on the real car.
+* Modify `path_to_model_weights` in `__utils__.py` to point to that weights file.
+* Copy-paste your model architecture from the Colab notebook into `model.py`.
+* TODO: Finish, write about how to run the code on the Razer laptops.
+
+You now have a node that publishes inferred binary masks of the road to `/road_mask` in the form of `Image` messages, where 1s are road and 0s not. You can now use these for line-following, similar to how you did it for lab 4.
+
 ### Race Day
 
 ### Tips
 
 Here are some things you may consider in developing your approach:
 
-*TODO: add*
+- This task can be easily parallelized -- data collection can happen at the same time as neural network construction.
+- Torch documentation (https://pytorch.org/docs/stable/nn.html) is your friend! Similarly, if confused about Torch syntax, try to look up examples of it online.
+- Since there's a lot of code to sift through, we've marked all locations where you need to actually change stuff with `TODO` comments. Please ctrl-F to look for those so you know you aren't missing anything.
+  - Naturally, do not hesitate to ask questions on Piazza.
+- Remember to use Colab's GPU backend. It speeds up training a LOT. `Runtime > Change Runtime Type > Hardware Accelerator > GPU` on Colab.
 
 ## General Notes
 
