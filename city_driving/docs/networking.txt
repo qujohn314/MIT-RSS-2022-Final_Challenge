@@ -1,0 +1,18 @@
+# Edit racecar IP on machine
+
+'vim /etc/hosts'
+add "192.186.1.[racecar number]    racecar" to list of hosts at the top
+
+# Get laptop IP on racecar router
+
+'ifconfig'
+copy the laptop ip starting with 192.168.1.xxx
+
+
+# Add environment vars for ROS IPs
+
+vim ~/.bashrc
+add the following lines to the bottom of the file:
+
+export ROS_IP=[laptop ip]
+export ROS_MASTER_URI=http://racecar:11311

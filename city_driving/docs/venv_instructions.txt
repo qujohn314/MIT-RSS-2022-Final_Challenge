@@ -1,0 +1,14 @@
+# Install virtual environment package
+pip3 install virtualenv
+
+# Make a virtual environment
+virtualenv ~/.final-challenge
+
+# Start the virtual environment
+source ~/.final-challenge/bin/activate
+
+# Install necessary torch requirements
+pip3 install -r requirements.txt
+
+# Run node with *python3*
+python3 stop_detector.py
