@@ -1,10 +1,9 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Race Day | Friday, April 29th at 10:00AM EDT |
-| Code Pushed to Github  | Friday, May 6th at 11:59PM EDT |
-| Briefing (15 min presentation + 5 min Q&A)([github pages](https://github.mit.edu/rss/website2021)) | Wednesday, May 4th at 1:00PM EDT |
-| Report ([github pages](https://github.mit.edu/rss/website2021)) | Monday, May 9th at 1:00PM EDT |
-| [Team Member Assessment](https://forms.gle/5npgrmk8mjdRGGcL7)  | Monday, May 9th at 1:00PM EDT |
+| Race Day | TBA |
+| Code Pushed to Github  | TBA |
+| Briefing (15 min presentation + 5 min Q&A) OR Report ([github pages](https://github.mit.edu/rss/website2021)) | TBA |
+| [Team Member Assessment](https://forms.gle/5npgrmk8mjdRGGcL7)  | TBA|
 
 # Final Challenge 2022
 
@@ -32,14 +31,13 @@ Luckily, you're armed with your knowledge from RSS and a good SSH connection! Le
 
 | Deliverable  Grade | Weighting             |
 |---------------|----------------------------------------------------------------------------|
-| Part A: Final Race (out of 100)  | 30% |
-| Part B: City Driving  | 15% |
-| Part C: Rainbow Road  | 15% |
-| Briefing Grade (out of 10) | 10% |
-| Report Grade (out of 10) | 30% |
+| Part A: Final Race (out of 100)  | 35% |
+| Part B: City Driving  | 25% |
+| Part C: Rainbow Road [BONUS]  | 10% |
+| Briefing OR Report Grade (out of 10) | 30% |
 
 ### Part A: Final Race
-Part A is worth 30% of your Final Challenge technical grade. Your grade will be calculated based on the time your car takes to drive around the track (`best_race_split`, in seconds) as follows:
+Part A is worth 35% of your Final Challenge technical grade. Your grade will be calculated based on the time your car takes to drive around the track (`best_race_split`, in seconds) as follows:
 
   `Part A grade = min(100 + (50 - best_race_split), 110)  - penalties`
 
@@ -53,7 +51,7 @@ As you can see from this grading scheme, it is possible to receive bonus points 
 
 ### Part B: City Driving
 
-Part B is worth 15% of your Final Challenge technical grade. Your grade will be calculated based on timed completion through the course (`best_city_time`, in seconds) and the number of `penalties` you incur as follows:
+Part B is worth 25% of your Final Challenge technical grade. Your grade will be calculated based on timed completion through the course (`best_city_time`, in seconds) and the number of `penalties` you incur as follows:
 
 `Part B grade = min(100 + staff_multiplier * (30 - best_city_time), 110) - penalties + car_wash`
 
@@ -65,9 +63,9 @@ And `num_collisions` is the number of times the car collides with anything in th
 
 As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this ~15 meter course, you will need to cover an average of around .5 m/s (but this value will be calibrated by our staff solution completion speed).
 
-### Part C: Rainbow Road
+### Part C: Rainbow Road [BONUS]
 
-Part C is worth 15% of your Final Challenge technical grade. Your grade will be calculated based on the number of `penalties` you incur as follows:
+Part C can add an additional 10% to your Final Challenge technical grade! Your grade will be calculated based on the number of `penalties` you incur as follows:
 
 `Part C grade = min(100 + 2 * staff_multiplier * (5 - best_race_split), 110)  - penalties`
 
@@ -78,6 +76,8 @@ Where `staff_multiplier` is a calibrating constant based off of the staff soluti
 And `num_lane_line_breaches` is the number of times the car drives outside of the Rainbow Road, and `num_long_breaches` is the number of times the car has driven outside of the road and stayed outside of the lane for greater than 3 seconds.
 
 The **maximum speed of your car should be 1.5 m/s**. 
+
+**Your team will choose between completing a final briefing or report (you do not need to complete both).**
 
 ### Briefing Evaluation (see [technical briefing rubric](https://docs.google.com/document/d/1NmqQP7n1omI9bIshF1Y-MP70gfDkgEeoMjpWv8hjfsY/edit?usp=sharing) for grading details)
 When grading the Technical approach and Experimental evaluation portions of your briefing, we will be looking specifically for **illustrative videos of your car following the track lane and Rainbow Road as well as executing city driving maneuvers.** Specifically, we would like videos highlighting:
