@@ -34,7 +34,7 @@ Luckily, you're armed with your knowledge from RSS and a good SSH connection! Le
 | Part A: Final Race (out of 100)  | 35% |
 | Part B: City Driving  | 25% |
 | Part C: Rainbow Road [BONUS]  | 10% |
-| Briefing OR Report Grade (out of 10) | 30% |
+| Briefing OR Report Grade (out of 10) | 40% |
 
 ### Part A: Final Race
 Part A is worth 35% of your Final Challenge technical grade. Your grade will be calculated based on the time your car takes to drive around the track (`best_race_split`, in seconds) as follows:
