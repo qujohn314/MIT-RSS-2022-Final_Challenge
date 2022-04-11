@@ -217,8 +217,10 @@ Finally, on to deployment of the neural net:
 * Download whatever weights you saved in `checkpoints` that you would like on the real car.
 * Modify `path_to_model_weights` in `__utils__.py` to point to that weights file.
 * Copy-paste your model architecture from the Colab notebook into `model.py`.
-* Copy the `road_detector` file over to the car (omitting the rosbag and any training/test data/other images, but including all code and the network weights).
-* Run `teleop`, `zed`, `python3 road_detector.py`.
+* Copy the `road_detector` file over to a Razer computer (omitting the rosbag and any training/test data/other images, but including all code and the network weights).
+  * You do not need to do this if you have a computer with ROS and Torch installed on it.
+* Set up two-way ROS communications between the car and your computer -- see Lab 3 for this (it's the `ROS_MASTER_URI, ROS_IP, /hosts/` thing).
+* Run `teleop` and `zed` on the car and `python3 road_detector.py` on the computer.
 
 You now have a node that publishes inferred binary masks of the road to `/road_mask` in the form of `Image` messages, where 1s are road and 0s not. You can now use these for line-following, similar to how you did it for lab 4.
 
