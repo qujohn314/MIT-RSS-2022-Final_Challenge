@@ -204,6 +204,7 @@ You've now extracted the images. On to annotations:
 * Modify `__utils__.py` to have the desired patch size (`H`, `W`).
 * Run `python3 annotate_imgs.py --path [path to images to annotate = ./images] --results [path to folder where annotations are saved = ./results]`
     * Click on `n = 10` points bounding the road to create a polygon around it, thus marking all patches in those as ones on the road. Then, close the window to move on to the next image. You may need to close out a tiny menu window between images too.
+    * This can be run in Docker, but requires a bit of setup. First, `sudo apt install python3-pip python3-tk`. Then, `pip3 install matplotlib pillow Shapely`, and any other library that isn't already installed / throws an error.
 
 Now, time to build your neural net and train:
 
@@ -216,7 +217,8 @@ Finally, on to deployment of the neural net:
 * Download whatever weights you saved in `checkpoints` that you would like on the real car.
 * Modify `path_to_model_weights` in `__utils__.py` to point to that weights file.
 * Copy-paste your model architecture from the Colab notebook into `model.py`.
-* TODO: Finish, write about how to run the code on the Razer laptops.
+* Copy the `road_detector` file over to the car (omitting the rosbag and any training/test data/other images, but including all code and the network weights).
+* Run `teleop`, `zed`, `python3 road_detector.py`.
 
 You now have a node that publishes inferred binary masks of the road to `/road_mask` in the form of `Image` messages, where 1s are road and 0s not. You can now use these for line-following, similar to how you did it for lab 4.
 
@@ -231,6 +233,8 @@ Here are some things you may consider in developing your approach:
 - Since there's a lot of code to sift through, we've marked all locations where you need to actually change stuff with `TODO` comments. Please ctrl-F to look for those so you know you aren't missing anything.
   - Naturally, do not hesitate to ask questions on Piazza.
 - Remember to use Colab's GPU backend. It speeds up training a LOT. `Runtime > Change Runtime Type > Hardware Accelerator > GPU` on Colab.
+- We expect the neural net to be imperfect. It may label some offroad parts as being road. Thus, you may want to use contractions and dilations to get rid of those outliers, like with color segmentation in lab 4. If even that does not get rid of the outliers, then use the largest continuous patch of `1`s in the mask as road (akin to using the largest contour in lab 4).
+  - Likewise, you can ignore any patches labelled as road that are too high up in the image (e.g. are background objects or on the ceiling or something).
 
 ## General Notes
 
