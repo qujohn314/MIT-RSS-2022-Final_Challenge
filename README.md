@@ -55,29 +55,29 @@ As you can see from this grading scheme, it is possible to receive bonus points 
 
 Part B is worth 15% of your Final Challenge technical grade. Your grade will be calculated based on timed completion through the course (`best_city_time`, in seconds) and the number of `penalties` you incur as follows:
 
-`Part B grade = min(100 + (20 - best_city_time), 110) - penalties + car_wash`
+`Part B grade = min(100 + staff_multiplier * (30 - best_city_time), 110) - penalties + car_wash`
 
-Where `car_wash` is a possible 5 points if your car drives through the car wash and 0 points otherwise, and `penalties` is calculated as follows:
+Where `staff_multiplier` is a calibrating constant based off of the staff solution (TBA), `car_wash` is a possible 5 points if your car drives through the car wash and 0 points otherwise, and `penalties` is calculated as follows:
 
 `penalties = 5 * num_collisions + 10 * traffic_infractions + 10 * manual_assist`
 
 And `num_collisions` is the number of times the car collides with anything in the city (ie. buildings, bricks, road signs), `traffic_infractions` is the number of times the car passes a stop sign without stopping for the correct duration or stops at a non-stop sign, and `manual_assist` is the number of maneuvers (counted individually for turning a corner, stopping at a stop sign, resetting a car, etc.) that required manual teleop intervention.
 
-As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1.5 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this < 20 meter course, you will need to cover an average of at most 1 m/s. 
+As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this ~15 meter course, you will need to cover an average of around .5 m/s (but this value will be calibrated by our staff solution completion speed).
 
 ### Part C: Rainbow Road
 
 Part C is worth 15% of your Final Challenge technical grade. Your grade will be calculated based on the number of `penalties` you incur as follows:
 
-`Part C grade = min(100 + 2 * (5 - best_race_split), 110)  - penalties`
+`Part C grade = min(100 + 2 * staff_multiplier * (5 - best_race_split), 110)  - penalties`
 
-Where `penalties` is calculated as follows:
+Where `staff_multiplier` is a calibrating constant based off of the staff solution (TBA) and `penalties` is calculated as follows:
 
   `penalties = 5 * num_lane_line_breaches + 5 * num_long_breaches`
   
 And `num_lane_line_breaches` is the number of times the car drives outside of the Rainbow Road, and `num_long_breaches` is the number of times the car has driven outside of the road and stayed outside of the lane for greater than 3 seconds.
 
-The **maximum speed of your car should be 2 m/s**. 
+The **maximum speed of your car should be 1.5 m/s**. 
 
 ### Briefing Evaluation (see [technical briefing rubric](https://docs.google.com/document/d/1NmqQP7n1omI9bIshF1Y-MP70gfDkgEeoMjpWv8hjfsY/edit?usp=sharing) for grading details)
 When grading the Technical approach and Experimental evaluation portions of your briefing, we will be looking specifically for **illustrative videos of your car following the track lane and Rainbow Road as well as executing city driving maneuvers.** Specifically, we would like videos highlighting:
