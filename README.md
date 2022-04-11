@@ -1,6 +1,6 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Race Day | Friday, May 6th at 10:00AM EDT |
+| Race Day | Friday, April 29th at 10:00AM EDT |
 | Code Pushed to Github  | Friday, May 6th at 11:59PM EDT |
 | Briefing (15 min presentation + 5 min Q&A)([github pages](https://github.mit.edu/rss/website2021)) | Wednesday, May 4th at 1:00PM EDT |
 | Report ([github pages](https://github.mit.edu/rss/website2021)) | Monday, May 9th at 1:00PM EDT |
