@@ -153,6 +153,7 @@ The City Driving Challenge is meant to be open-ended. You should make use of wha
 Here are some things you may consider in developing your approach:
 
 - How do you implement the high-level logic that puts together line-following, stop sign detection, and collision avoidance?
+  - Perhaps a state machine would be helpful--how would you connect the different tasks?
 - How should the speed of your car be adjusted as you detect a stop sign, decide it is close enough, and turn corners?
 
 As always, your safety controller should be turned on for this portion of the Final Challenge as well, although the city will not damage the car should you collide with anything.
