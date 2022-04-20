@@ -147,7 +147,15 @@ The Em-tire, in their infinite wisdom and with their love of buzz words, has alr
 Of course, you are to avoid crashing into buildings as well. Somewhere in the city there is also a car wash; you've heard that going through the car wash might save you some time (and provide a bonus as the Em-tire values cleanliness), though it seems that your car's LIDAR will not work inside...
 
 
-### Race Day
+### Clarifications
+
+- The orange line will never drive you into obstacles.
+
+- The orange line will never split.
+
+- The orange line will not enter the car wash. The car wash entrance and exit will be covered in blue streamers which will look like a wall to your lidar. The car wash will have walls bounding its interior and the orange line will pass by its exit.
+
+- The bricks will not be in the way of the robot. They will just be visual distractors that will make stop sign detection more difficult than simply color segmentation.
 
 ### Tips
 
