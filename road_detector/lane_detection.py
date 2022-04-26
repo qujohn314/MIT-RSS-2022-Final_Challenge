@@ -5,10 +5,9 @@ import rospy
 
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
-from computer_vision.color_segmentation import cd_color_segmentation
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Point #geometry_msgs not in CMake file
-from visual_servoing.msg import ConeLocationPixel
+from lane_detection.msg import LaneLines
 
 class LaneDetector():
     """
@@ -21,7 +20,7 @@ class LaneDetector():
     self.LineFollower = False
 
     # Subscribe to ZED camera RGB frames
-    self.lane_pub = rospy.Publisher("/relative_lane_lines", LaneLine, queue_size=10)
+    self.lane_pub = rospy.Publisher("/relative_lane_lines", LaneLines, queue_size=10)
     self.debug_pub = rospy.Publisher("/lane_lines_img", Image, queue_size=10)
     self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
     self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
@@ -49,7 +48,7 @@ def image_callback(self, image_msg):
 	
 
     # Loads an image
-    src = cv2.imread(input_file, cv2.IMREAD_GRAYSCALE)
+    src = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
     # Check if image is loaded fine
     if src is None:
         print ('Error opening image!')
@@ -62,6 +61,7 @@ def image_callback(self, image_msg):
     
     # Copy edges to the images that will display the results in BGR
     cdstP = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
+
     #Hough Transform
     linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
     
@@ -70,4 +70,21 @@ def image_callback(self, image_msg):
             l = linesP[i][0]
             cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
 
-	pixel_msg = ConeLocationPixel()
+    else:
+        rospy.loginfo("no lane lines detected")
+
+	lane_msg = LaneLines()
+
+    if linesP is None:
+        rospy.loginfo("no lane lines detected")
+
+    else:
+        self.lane_pub.publish(lane_msg)
+
+if __name__ == '__main__':
+    try:
+        rospy.init_node('LaneDetector', anonymous=True)
+        LaneDetector()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass

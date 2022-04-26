@@ -71,6 +71,7 @@ def main(argv):
     im.save('CDSTP.png')
     
     cv2.waitKey()
+    sys.exit(0)
     return 0
     
 if __name__ == "__main__":
