@@ -3,6 +3,13 @@ import rospy
 import numpy as np
 
 from ackermann_msgs.msg import AckermannDriveStamped
+from enum import Enum
+
+class State(Enum):
+    STOPPED = 1
+    DRIVING = 2
+    CAR_WASH = 3
+
 
 class StateMachine:
     def __init__(self):
@@ -12,9 +19,8 @@ class StateMachine:
         self.drive_pub = rospy.Publisher(DRIVE_TOPIC, AckermannDriveStamped, queue_size=10)
         self.stop_sub("/should_stop", Bool, self.stop_callback)
         self.parking_cmd = None
-        self.stop = False
+        self.state = State.DRIVING
         self.last_stop_time = None
-        self.car_wash = False # set to always false for now
 
         self.stopping_distance = 0.75 
         
@@ -33,7 +39,12 @@ class StateMachine:
         pass 
         
     def callback(self, img_msg):
-        if not self.stop:
+        
+
+
+
+
+        if self.state = State.DRIVING:
             if not self.car_wash:
                 if self.parking_cmd == None:
                     rospy.loginfo("Waiting for command from parking controller ... ")
@@ -42,7 +53,7 @@ class StateMachine:
                 cmd = self.parking_cmd
             else:
                 return # do whatever we have to do for car wash
-        else:
+        elif self.state = State.STOPPED:
             cmd = AckermannDriveStamped()
             cmd.header.stamp = rospy.Time.now()
             cmd.header.frame_id = "base_link"
@@ -50,9 +61,11 @@ class StateMachine:
             # cmd.drive.steering_angle_velocity = 0
             cmd.drive.acceleration = 0
             # cmd.drive.jerk = 0
-
-            self.stop = False
             self.last_stop_time = cmd.header.stamp
+
+        elif self.state = State.CAR_WASH:
+            pass
+
         
         self.drive_pub.publish(cmd)
 
