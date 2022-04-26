@@ -14,7 +14,8 @@ from homography_transformer import HomographyTransformer
 
 class SignDetector:
     def __init__(self):
-        self.stopping_distance = 0.75 
+        self.stopping_distance = 1
+        self.stopping_buffer = 0 # if we need more of a buffer in order to stop 
         self.pole_sign_ratio = 0.3
         self.homography_transformer = HomographyTransformer()
 
@@ -35,10 +36,11 @@ class SignDetector:
         is_stop, bounding_box = self.detector.predict(rgb_img)
         if is_stop: 
             # calculated distance to the stop sign, if within stopping distance publish bool command
-            bounding_box = xmin, ymin, xmax, ymax
-            pole_v = stop_sign.ymin - sign_height * self.pole_sign_ratio
-            pole_u = (stop_sign.xmax - stop_sign.xmin)//2
-            x, y = self.homography_transformer.transformUvToXy(pole_u, pole_v)
+            xmin, ymin, xmax, ymax = bounding_box
+            sign_height = ymax - ymin
+            base_v = ymin - sign_height * self.pole_sign_ratio
+            base_u = (xmax - xmin)//2
+            x, y = self.homography_transformer.transformUvToXy(base_u, base_v)
             # FOR NOW: distance from the robot's camera is the x value 
             if x > self.stopping_distance + self.stopping_buffer:
                 ret.data = True 

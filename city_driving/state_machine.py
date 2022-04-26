@@ -23,36 +23,29 @@ class StateMachine:
         self.last_stop_time = None
 
         self.stopping_distance = 0.75 
-        
-
+    
     def stop_callback(self, msg):
         now = rospy.Time.now()
 
         # if stop sign is close and the last time we stopped was over a second ago 
         if msg.data and (last_stop_time == None or now - self.last_stop_time > rospy.Duration(1)):
             self.stop = True
+        self.run()
 
     def parking_callback(self, msg):
         self.parking_cmd = msg
+        self.run()
     
     def car_wash_callback(self, msg):
         pass 
         
-    def callback(self, img_msg):
-        
-
-
-
-
+    def run(self):
         if self.state = State.DRIVING:
-            if not self.car_wash:
-                if self.parking_cmd == None:
-                    rospy.loginfo("Waiting for command from parking controller ... ")
-                    time.sleep(2)
-                    return 
-                cmd = self.parking_cmd
-            else:
-                return # do whatever we have to do for car wash
+            if self.parking_cmd == None:
+                rospy.loginfo("Waiting for command from parking controller ... ")
+                time.sleep(2)
+                return 
+            cmd = self.parking_cmd
         elif self.state = State.STOPPED:
             cmd = AckermannDriveStamped()
             cmd.header.stamp = rospy.Time.now()
@@ -64,7 +57,7 @@ class StateMachine:
             self.last_stop_time = cmd.header.stamp
 
         elif self.state = State.CAR_WASH:
-            pass
+            return 
 
         
         self.drive_pub.publish(cmd)
@@ -76,3 +69,4 @@ if __name__ == '__main__':
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
+    while True: 
