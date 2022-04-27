@@ -24,61 +24,102 @@ class LaneDetector():
         self.debug_pub = rospy.Publisher("/lane_lines_img", Image, queue_size=10)
         self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
         self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
-        self.lane_lines_pub = rospy.Publisher("/zed/zed_node/rgb/image_bound_boxes", Image, queue_size=10)
-        self.lane_detect_pub_mask = rospy.Publisher("/zed/zed_node/rgb/image_mask",Image,queue_size=10)
+        # self.lane_lines_pub = rospy.Publisher("/zed/zed_node/rgb/image_bound_boxes", Image, queue_size=10)
+        # self.lane_detect_pub_mask = rospy.Publisher("/zed/zed_node/rgb/image_mask",Image,queue_size=10)
 
-def image_callback(self, image_msg):
-    """
-    """
+    def calculate_slope(self, coordinates):
+        if coordinates[0] - coordinates[2] == 0:
+            slope = 1000
+        else: 
+            slope = (coordinates[1] - coordinates[3])/(coordinates[0] - coordinates[2])
+        
+        return slope
 
-    image = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
-	
-	# img_width= image.shape[1]
-	# img_height = image.shape[0]
-	# large_cutoff = round(img_height/2)
-	# small_section_cutoff = round(img_height*0.8)
-	
-	# for row in range(large_cutoff):
-	# 	for column in range(img_width):
-	# 		image[row][column] = np.array([0,0,0]) # convert to black pixel
-	
-	# for row in range(small_section_cutoff:img_height):
-	# 	for column in range(img_width):
-	# 		image[row][column] = np.array([0,0,0]) # convert to black pixels
-	
+    def get_hough_lines(self, image)
+        """
+        Applies a mask, edge detection and hough transform to the roi of the image 
 
-    # Loads an image
-    src = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
-    # Check if image is loaded fine
-    if src is None:
-        print ('Error opening image!')
-        print ('Usage: hough_lines.py [image_name -- default ' + default_file + '] \n')
-        return -1
-    
-    #Edge detection
-    dst = cv2.Canny(src[0:], 50, 200, None, 3)
-    debug_msg = self.bridge.cv2_to_imgmsg(dst, "bgr8")
-    
-    # Copy edges to the images that will display the results in BGR
-    cdstP = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
+        Parameters:
+            image (numpy array) - image ready in cv2 format
 
-    #Hough Transform
-    linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
-    
-    if linesP is not None:
+        Returns:
+            linesP (numpy array) - array of lines found in form of (x1, y1, x2, y2)
+        """
+        # Create mask
+        lower = np.array([180, 180, 180], dtype="uint8")
+        upper = np.array([255, 255, 255], dtype="uint8")
+        mask = cv2.inRange(image, lower, upper)
+        masked = cv2. bitwise_and(image, image, mask = mask)
+
+        src = cv2.cvtColor(masked, cv2.COLOR_BGR2GRAY)
+        # Check if image is loaded fine
+        if src is None:
+            print ('Error opening image!')
+            print ('Usage: hough_lines.py [image_name -- default ' + default_file + '] \n')
+            return -1
+
+        # Create ROI -- EDIT THIS for ZED camera!
+        horizontal_crop = 1000
+        vertical_crop = 1500
+        roi = src[vertical_crop:, horizontal_crop:horizontal_crop+1800]
+        dst = cv2.Canny(roi, 50, 200, None, 3)
+        
+        # Copy edges to the images that will display the results in BGR
+        cdstP = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
+        
+        # Finds Hough Lines
+        # linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10) #og parameters
+        linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 100, 30)
+
+        #Graph lines (optional) for debugging
+        if linesP is not None:
+            for i in range(0, len(linesP)):
+                l = linesP[i][0]
+                # NEED TO PUBLISH THIS TO ZED SOME WAY
+                cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+        
+
+        #Return lines
+        if linesP is None:
+            rospy.loginfo("No lines detected!")
+        else:
+            return linesP
+
+
+    def get_lane(self, linesP)
+        """
+        Gets the inside lane from the set of hough lines
+
+        Parameters: 
+            linesP (list) - list of hough lines
+        Returns:
+            inside_line (numpy array) - line that represents the lane [x1, y1, x2, y2]
+        """
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+            if abs(self.calculate_slope(l)) > 1: #gets rid of horizontal lines
+                if l[1] > len(dst) - 100 or l[3] > len(dst) - 100:
+                    if l[0] < len(dst[0])/2 or l[2] < len(dst[0])/2:
+                        inside_lane = l
+                        return inside_lane
 
-    else:
-        rospy.loginfo("no lane lines detected")
+        rospy.loginfo("Inside lane not detected")
 
-	lane_msg = LaneLines()
 
-    if linesP is None:
-        rospy.loginfo("no lane lines detected")
+    def image_callback(self, image_msg):
+        """
+        Takes in image message from camera and then publishes the inside lane in a LaneLines message
+        """
+        im = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
+        linesP = self.get_hough_lines(image)
+        inside_lane = self.get_lane(linesP)
 
-    else:
+        lane_msg = LaneLines()
+        lane_msg.x1 = insdie_lane[0]
+        lane_msg.y1 = insdie_lane[1]
+        lane_msg.x2 = insdie_lane[2]
+        lane_msg.y2 = insdie_lane[3]
+
         self.lane_pub.publish(lane_msg)
 
 if __name__ == '__main__':
