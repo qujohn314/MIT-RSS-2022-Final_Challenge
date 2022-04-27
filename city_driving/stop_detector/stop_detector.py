@@ -1,12 +1,16 @@
 import cv2
 import rospy
+import sys
+#Get path to stop_sign_detector ML class
+sys.path.append("/home/racecar/racecar_ws/src/stop_sign_detector")
 
 import numpy as np
+
 from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 
 
-from detector import StopSignDetector
+from stop_sign_detector import StopSignDetector
 
 from ackermann_msgs.msg import AckermannDriveStamped
 
@@ -33,8 +37,8 @@ class SignDetector:
         bgr_img = np_img[:,:,:-1]
         rgb_img = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
 
-        is_stop, bounding_box = self.detector.predict(rgb_img)
-        if is_stop: 
+        bounding_box = self.detector.predict(rgb_img)
+        if bounding_box is not None: 
             # calculated distance to the stop sign, if within stopping distance publish bool command
             xmin, ymin, xmax, ymax = bounding_box
             sign_height = ymax - ymin
@@ -44,7 +48,7 @@ class SignDetector:
             # FOR NOW: distance from the robot's camera is the x value 
             if x > self.stopping_distance + self.stopping_buffer:
                 ret.data = True 
-        
+        self.publisher.publish(ret)
 
 if __name__=="__main__":
     rospy.init_node("stop_sign_detector")
