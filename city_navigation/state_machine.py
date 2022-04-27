@@ -6,6 +6,7 @@ import numpy as np
 
 from ackermann_msgs.msg import AckermannDriveStamped
 from enum import Enum
+from std_msgs.msg import Bool
 
 class State(Enum):
     STOPPED = 1
@@ -17,9 +18,9 @@ class StateMachine:
     def __init__(self):
         DRIVE_TOPIC = rospy.get_param("~drive_topic")
 
-        self.parking_controller_subscriber("/parking_controller_drive_cmd", AckermannDriveStamped, self.callback)
+        self.parking_controller_subscriber = rospy.Subscriber("/parking_controller_drive_cmd", AckermannDriveStamped, self.parking_callback)
         self.drive_pub = rospy.Publisher(DRIVE_TOPIC, AckermannDriveStamped, queue_size=10)
-        self.stop_sub("/should_stop", Bool, self.stop_callback)
+        self.stop_sub = rospy.Subscriber("/should_stop", Bool, self.stop_callback)
         self.parking_cmd = None
         self.state = State.DRIVING
         self.last_stop_time = None
@@ -33,6 +34,7 @@ class StateMachine:
         if msg.data and (self.last_stop_time == None or now - self.last_stop_time > rospy.Duration(1)):
             self.state = State.STOPPED 
             self.last_stop_time = now
+            rospy.loginfo("NEW STOP SIGN DETECTED!")
         self.run()
 
     def parking_callback(self, msg):
@@ -43,6 +45,7 @@ class StateMachine:
         pass 
         
     def run(self):
+        rospy.loginfo(self.state)
         if self.state == State.DRIVING:
             if self.parking_cmd == None:
                 rospy.loginfo("Waiting for command from parking controller ... ")
@@ -58,6 +61,7 @@ class StateMachine:
             # cmd.drive.steering_angle_velocity = 0
             cmd.drive.acceleration = 0
             # cmd.drive.jerk = 0
+            rospy.loginfo("Stopped for: " + str(cmd.header.stamp - self.last_stop_time))
             if cmd.header.stamp - self.last_stop_time > rospy.Duration(1):
                 self.state == State.DRIVING
             
