@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import argparse
 import os
+import scipy.ndimage as ndi
 from PIL import Image
 
 
@@ -29,12 +30,32 @@ def main(argv):
         print ('Usage: hough_lines.py [image_name -- default ' + default_file + '] \n')
         return -1
     
+    smooth = ndi.filters.median_filter(src, size=2)
+    edges = smooth > 180
+
+    lines = cv2.HoughLines(edges.astype(np.uint8), 0.5, np.pi/180, 120)
+
+    for i in range(len(lines)):
+        for rho,theta in lines[i]:
+            # print(rho, theta)
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a*rho
+            y0 = b*rho
+            x1 = int(x0 + 1000*(-b))
+            y1 = int(y0 + 1000*(a))
+            x2 = int(x0 - 1000*(-b))
+            y2 = int(y0 - 1000*(a))
+            cv2.line(src,(x1,y1),(x2,y2),(0,0,255),2)
+
+    # Show the result
+    cv2.imshow("Line Detection", src)
+
+    # dst = cv2.Canny(src[0:], 50, 200, None, 3)
     
-    dst = cv2.Canny(src[0:], 50, 200, None, 3)
-    
-    # Copy edges to the images that will display the results in BGR
-    cdst = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
-    cdstP = np.copy(cdst)
+    # # Copy edges to the images that will display the results in BGR
+    # cdst = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
+    # cdstP = np.copy(cdst)
     
     # lines = cv2.HoughLines(dst, 1, np.pi / 180, 150, None, 0, 0)
     
@@ -51,24 +72,24 @@ def main(argv):
     #         cv2.line(cdst, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
     
     
-    linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
+    # linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
     
-    if linesP is not None:
-        for i in range(0, len(linesP)):
-            l = linesP[i][0]
-            cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+    # if linesP is not None:
+    #     for i in range(0, len(linesP)):
+    #         l = linesP[i][0]
+    #         cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
     
-    # # cv2.imshow("Source", src)
-    # im = Image.fromarray(src).convert('RGB')
-    # im.save('Source.png')
+    # # # cv2.imshow("Source", src)
+    # # im = Image.fromarray(src).convert('RGB')
+    # # im.save('Source.png')
 
-    # # cv2.imshow("Detected Lines (in red) - Standard Hough Line Transform", cdst)
-    # im = Image.fromarray(cdst).convert('RGB')
-    # im.save('CDST.png')
+    # # # cv2.imshow("Detected Lines (in red) - Standard Hough Line Transform", cdst)
+    # # im = Image.fromarray(cdst).convert('RGB')
+    # # im.save('CDST.png')
 
-    # cv2.imshow("Detected Lines (in red) - Probabilistic Line Transform", cdstP)
-    im = Image.fromarray(cdstP).convert('RGB')
-    im.save('CDSTP.png')
+    # # cv2.imshow("Detected Lines (in red) - Probabilistic Line Transform", cdstP)
+    # im = Image.fromarray(cdstP).convert('RGB')
+    # im.save('CDSTP.png')
     
     cv2.waitKey()
     sys.exit(0)

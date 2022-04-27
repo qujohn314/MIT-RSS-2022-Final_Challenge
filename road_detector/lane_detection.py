@@ -17,15 +17,15 @@ class LaneDetector():
     """
     def __init__(self):
     # toggle line follower vs cone parker
-    self.LineFollower = False
+        self.LineFollower = False
 
-    # Subscribe to ZED camera RGB frames
-    self.lane_pub = rospy.Publisher("/relative_lane_lines", LaneLines, queue_size=10)
-    self.debug_pub = rospy.Publisher("/lane_lines_img", Image, queue_size=10)
-    self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
-    self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
-    self.lane_lines_pub = rospy.Publisher("/zed/zed_node/rgb/image_bound_boxes", Image, queue_size=10)
-    self.lane_detect_pub_mask = rospy.Publisher("/zed/zed_node/rgb/image_mask",Image,queue_size=10)
+        # Subscribe to ZED camera RGB frames
+        self.lane_pub = rospy.Publisher("/relative_lane_lines", LaneLines, queue_size=10)
+        self.debug_pub = rospy.Publisher("/lane_lines_img", Image, queue_size=10)
+        self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
+        self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
+        self.lane_lines_pub = rospy.Publisher("/zed/zed_node/rgb/image_bound_boxes", Image, queue_size=10)
+        self.lane_detect_pub_mask = rospy.Publisher("/zed/zed_node/rgb/image_mask",Image,queue_size=10)
 
 def image_callback(self, image_msg):
     """
