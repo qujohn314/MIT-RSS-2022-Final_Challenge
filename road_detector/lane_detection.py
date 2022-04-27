@@ -22,7 +22,7 @@ class LaneDetector():
 
         # Subscribe to ZED camera RGB frames
         self.lane_pub = rospy.Publisher("/relative_lane_lines", LaneLines, queue_size=10)
-        self.debug_pub = rospy.Publisher("/lane_lines_img", Image, queue_size=10)
+        self.debug_pub = rospy.Publisher("/zed/zed_node/rgb/lane_lines_img", Image, queue_size=10)
         self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
         self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
         # self.lane_lines_pub = rospy.Publisher("/zed/zed_node/rgb/image_bound_boxes", Image, queue_size=10)
@@ -60,9 +60,9 @@ class LaneDetector():
             return -1
 
         # Create ROI -- EDIT THIS for ZED camera!
-        horizontal_crop = 1000
-        vertical_crop = 1500
-        roi = src[vertical_crop:, horizontal_crop:horizontal_crop+1800]
+        horizontal_crop = 0
+        vertical_crop = 0
+        roi = src[vertical_crop:, horizontal_crop:]
         dst = cv2.Canny(roi, 50, 200, None, 3)
         
         # Copy edges to the images that will display the results in BGR
@@ -76,14 +76,16 @@ class LaneDetector():
         if linesP is not None:
             for i in range(0, len(linesP)):
                 l = linesP[i][0]
-                # NEED TO PUBLISH THIS TO ZED SOME WAY
                 cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
         
+        debug_msg = self.bridge.cv2_to_imgmsg(cdstP, "passthrough")
+        self.debug_pub.publish(debug_msg)
 
         #Return lines
         if linesP is None:
             rospy.loginfo("No lines detected!")
         else:
+            rospy.loginfo(linesP)
             return linesP, dst
 
 
@@ -105,6 +107,7 @@ class LaneDetector():
                         return inside_lane
 
         rospy.loginfo("Inside lane not detected")
+        return [0, 0, 0, 0]
 
 
     def image_callback(self, image_msg):
