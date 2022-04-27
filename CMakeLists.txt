@@ -53,9 +53,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   ConeLocationPixel.msg
-   ConeLocation.msg
-   ParkingError.msg
+   ## ConeLocationPixel.msg
+   ## ConeLocation.msg
+   ## ParkingError.msg
+   LaneLines.msg
 )
 
 ## Generate services in the 'srv' folder
