@@ -36,7 +36,7 @@ class LaneDetector():
         
         return slope
 
-    def get_hough_lines(self, image)
+    def get_hough_lines(self, image):
         """
         Applies a mask, edge detection and hough transform to the roi of the image 
 
@@ -56,7 +56,7 @@ class LaneDetector():
         # Check if image is loaded fine
         if src is None:
             print ('Error opening image!')
-            print ('Usage: hough_lines.py [image_name -- default ' + default_file + '] \n')
+            # print ('Usage: hough_lines.py [image_name -- default ' + default_file + '] \n')
             return -1
 
         # Create ROI -- EDIT THIS for ZED camera!
@@ -84,10 +84,10 @@ class LaneDetector():
         if linesP is None:
             rospy.loginfo("No lines detected!")
         else:
-            return linesP
+            return linesP, dst
 
 
-    def get_lane(self, linesP)
+    def get_lane(self, linesP, dst):
         """
         Gets the inside lane from the set of hough lines
 
@@ -112,14 +112,14 @@ class LaneDetector():
         Takes in image message from camera and then publishes the inside lane in a LaneLines message
         """
         im = self.bridge.imgmsg_to_cv2(image_msg, "bgr8")
-        linesP = self.get_hough_lines(image)
-        inside_lane = self.get_lane(linesP)
+        linesP, dst = self.get_hough_lines(im)
+        inside_lane = self.get_lane(linesP, dst)
 
         lane_msg = LaneLines()
-        lane_msg.x1 = insdie_lane[0]
-        lane_msg.y1 = insdie_lane[1]
-        lane_msg.x2 = insdie_lane[2]
-        lane_msg.y2 = insdie_lane[3]
+        lane_msg.x1 = inside_lane[0]
+        lane_msg.y1 = inside_lane[1]
+        lane_msg.x2 = inside_lane[2]
+        lane_msg.y2 = inside_lane[3]
 
         self.lane_pub.publish(lane_msg)
 
