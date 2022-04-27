@@ -5,6 +5,7 @@ import rospy
 
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
+from final_challenge.msg import LaneLines
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from lane_detection.msg import LaneLines
