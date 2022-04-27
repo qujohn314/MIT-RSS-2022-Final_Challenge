@@ -22,76 +22,40 @@ def main(argv):
         print("Error, need an input file.")
         sys.exit(1)
     
-    # Loads an image
-    src = cv2.imread(input_file, cv2.IMREAD_GRAYSCALE)
+    # Loads an image and applies a mask to isolate white pixels
+    image = cv2.imread(input_file, cv2.IMREAD_COLOR)
+    lower = np.array([180, 180, 180], dtype="uint8")
+    upper = np.array([255, 255, 255], dtype="uint8")
+    mask = cv2.inRange(image, lower, upper)
+    masked = cv2. bitwise_and(image, image, mask = mask)
+    im = Image.fromarray(masked).convert('RGB')
+    im.save('masked.png')
+
+    src = cv2.cvtColor(masked, cv2.COLOR_BGR2GRAY)
+    # src = cv2.imread(masked, cv2.IMREAD_GRAYSCALE)
     # Check if image is loaded fine
     if src is None:
         print ('Error opening image!')
         print ('Usage: hough_lines.py [image_name -- default ' + default_file + '] \n')
         return -1
-    
-    smooth = ndi.filters.median_filter(src, size=2)
-    edges = smooth > 180
 
-    lines = cv2.HoughLines(edges.astype(np.uint8), 0.5, np.pi/180, 120)
-
-    for i in range(len(lines)):
-        for rho,theta in lines[i]:
-            # print(rho, theta)
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a*rho
-            y0 = b*rho
-            x1 = int(x0 + 1000*(-b))
-            y1 = int(y0 + 1000*(a))
-            x2 = int(x0 - 1000*(-b))
-            y2 = int(y0 - 1000*(a))
-            cv2.line(src,(x1,y1),(x2,y2),(0,0,255),2)
-
-    # Show the result
-    cv2.imshow("Line Detection", src)
-
-    # dst = cv2.Canny(src[0:], 50, 200, None, 3)
+    dst = cv2.Canny(src[0:], 50, 200, None, 3)
     
-    # # Copy edges to the images that will display the results in BGR
-    # cdst = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
-    # cdstP = np.copy(cdst)
+    # Copy edges to the images that will display the results in BGR
+    cdstP = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
     
-    # lines = cv2.HoughLines(dst, 1, np.pi / 180, 150, None, 0, 0)
+    # Finds Hough Lines
+    linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
     
-    # if lines is not None:
-    #     for i in range(0, len(lines)):
-    #         rho = lines[i][0][0]
-    #         theta = lines[i][0][1]
-    #         a = math.cos(theta)
-    #         b = math.sin(theta)
-    #         x0 = a * rho
-    #         y0 = b * rho
-    #         pt1 = (int(x0 + 1000*(-b)), int(y0 + 1000*(a)))
-    #         pt2 = (int(x0 - 1000*(-b)), int(y0 - 1000*(a)))
-    #         cv2.line(cdst, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
-    
-    
-    # linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10)
-    
-    # if linesP is not None:
-    #     for i in range(0, len(linesP)):
-    #         l = linesP[i][0]
-    #         cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
-    
-    # # # cv2.imshow("Source", src)
-    # # im = Image.fromarray(src).convert('RGB')
-    # # im.save('Source.png')
-
-    # # # cv2.imshow("Detected Lines (in red) - Standard Hough Line Transform", cdst)
-    # # im = Image.fromarray(cdst).convert('RGB')
-    # # im.save('CDST.png')
+    if linesP is not None:
+        for i in range(0, len(linesP)):
+            l = linesP[i][0]
+            cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
 
     # # cv2.imshow("Detected Lines (in red) - Probabilistic Line Transform", cdstP)
-    # im = Image.fromarray(cdstP).convert('RGB')
-    # im.save('CDSTP.png')
+    im = Image.fromarray(cdstP).convert('RGB')
+    im.save('masked_hough_lines.png')
     
-    cv2.waitKey()
     sys.exit(0)
     return 0
     
