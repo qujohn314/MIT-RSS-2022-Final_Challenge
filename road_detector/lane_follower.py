@@ -26,6 +26,8 @@ class LaneFollower:
     FRONT_BUFFER = 0.7 # car needs 0.62m to turn when wall is in front, added .7 to be safe
     #FRONT_BUFFER = 1
     previous_error = 0
+    img_height = 100 #placeholder
+    img_width = 100 #placeholder
 
     # more conservative
     # k_p = 5
@@ -72,25 +74,37 @@ class LaneFollower:
         steering_angle = np.arctan(self.k_p * error +
                                 self.k_d * derivative) * self.SIDE + np.arctan(m)
         self.previous_error = error
-        self.error_publisher.publish(error)
-	# rospy.loginfo("New steering angle %f", steering_angle)
+        # self.error_publisher.publish(error)
         return steering_angle
         
 
     def get_side_range(self, data):
-        ranges = np.array(data.ranges)
-        r_theta_ranges = np.array([np.array([ranges[i], data.angle_min + i * data.angle_increment])
-                            for i in range(len(ranges))])
 
-        # right, left wall lines
-        splits = np.array_split(r_theta_ranges, 2)
-        splits = [list(filter(lambda x : x[0] < self.DESIRED_DISTANCE + self.FRONT_BUFFER, split)) for split in splits]
+        data_range = []
+        # convert this operation to numpy
+        for x,y in data:
+            new_x = x - img_width/2.0
+            new_y = img_height - y
+        
+            scaled_x = new_x * pixel_to_meters
+            scaled_y = new_y * pixel_to_meters
 
-        # x, y coordinates
-        xy_ranges = np.array([np.array([np.array([p[0] * np.cos(p[1]), p[0] * np.sin(p[1])]) for p in split])
-                                for split in splits])
+            data_range.append((scaled_x, scaled_y))
+        
+        
+        # ranges = np.array(data.ranges)
+        # r_theta_ranges = np.array([np.array([ranges[i], data.angle_min + i * data.angle_increment])
+        #                     for i in range(len(ranges))])
 
-        return xy_ranges[1]
+        # # right, left wall lines
+        # splits = np.array_split(r_theta_ranges, 2)
+        # splits = [list(filter(lambda x : x[0] < self.DESIRED_DISTANCE + self.FRONT_BUFFER, split)) for split in splits]
+
+        # # x, y coordinates
+        # xy_ranges = np.array([np.array([np.array([p[0] * np.cos(p[1]), p[0] * np.sin(p[1])]) for p in split])
+        #                         for split in splits])
+
+        # return xy_ranges[1]
     
     # def check_front(self, msg):
     #     # make sure that the three points directly in front of the robot are further than desired dist
