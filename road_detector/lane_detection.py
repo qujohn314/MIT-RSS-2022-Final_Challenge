@@ -32,7 +32,9 @@ class LaneDetector():
         if coordinates[0] - coordinates[2] == 0:
             slope = 1000
         else: 
-            slope = (coordinates[1] - coordinates[3])/(coordinates[0] - coordinates[2])
+            delta_y = coordinates[1] - coordinates[3]
+            delta_x = coordinates[0] - coordinates[2]
+            slope = float(delta_y)/float(delta_x)
         
         return slope
 
@@ -60,9 +62,11 @@ class LaneDetector():
             return -1
 
         # Create ROI -- EDIT THIS for ZED camera!
+        # width: 672 pixels
+        # height: 376 pixels
         horizontal_crop = 0
-        vertical_crop = 0
-        roi = src[vertical_crop:, horizontal_crop:]
+        vertical_crop = 150
+        roi = src[vertical_crop:, horizontal_crop:200]
         dst = cv2.Canny(roi, 50, 200, None, 3)
         
         # Copy edges to the images that will display the results in BGR
@@ -72,12 +76,24 @@ class LaneDetector():
         # linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 50, 10) #og parameters
         linesP = cv2.HoughLinesP(dst, 1, np.pi / 180, 50, None, 100, 30)
 
-        #Graph lines (optional) for debugging
-        if linesP is not None:
-            for i in range(0, len(linesP)):
-                l = linesP[i][0]
-                cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+        # #Graph lines (optional) for debugging
+        # if linesP is not None:
+        #     for i in range(0, len(linesP)):
+        #         l = linesP[i][0]
+        #         cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
         
+        # debug_msg = self.bridge.cv2_to_imgmsg(cdstP, "passthrough")
+        # self.debug_pub.publish(debug_msg)
+
+        for i in range(0, len(linesP)):
+            l = linesP[i][0]
+            rospy.loginfo(self.calculate_slope(l))
+            if -1 < self.calculate_slope(l) < -0.6: #gets rid of horizontal lines
+                if l[1] > len(dst) - 50 or l[3] > len(dst) - 50:
+                    if l[0] < len(dst[0])/2 or l[2] < len(dst[0])/2:
+                        inside_lane = l
+                        cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+
         debug_msg = self.bridge.cv2_to_imgmsg(cdstP, "passthrough")
         self.debug_pub.publish(debug_msg)
 
@@ -85,7 +101,6 @@ class LaneDetector():
         if linesP is None:
             rospy.loginfo("No lines detected!")
         else:
-            rospy.loginfo(linesP)
             return linesP, dst
 
 
@@ -100,10 +115,11 @@ class LaneDetector():
         """
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            if abs(self.calculate_slope(l)) > 1: #gets rid of horizontal lines
+            if abs(self.calculate_slope(l)) > .2: #gets rid of horizontal lines
                 if l[1] > len(dst) - 100 or l[3] > len(dst) - 100:
                     if l[0] < len(dst[0])/2 or l[2] < len(dst[0])/2:
                         inside_lane = l
+                        # rospy.loginfo(inside_lane)
                         return inside_lane
 
         rospy.loginfo("Inside lane not detected")
