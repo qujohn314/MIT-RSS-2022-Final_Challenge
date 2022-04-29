@@ -125,21 +125,21 @@ class LaneFollower():
 	    # rospy.loginfo("Distance to cone: %f", distance_to_cone)
         if(0.5 <= distance_to_cone <= 0.8 and -self.error_tolerance*2*np.pi/360 <= relative_angle <= self.error_tolerance*2*np.pi/360):
             rospy.loginfo("Complete!")
-            drive_cmd.drive.speed = 0
+            # drive_cmd.drive.speed = 0
         # if(-np.pi/4 <= relative_angle <= np.pi/4):
         #     self.relative_x=None
         #     self.relative_y=None
 
-        elif self.relative_x == -100000 or self.relative_y == -100000: # if we cant see cone, assuming relative pos are None
-            # move in a circle 
-            rospy.loginfo("move in a circle")
-            drive_cmd.drive.speed = 1
-            drive_cmd.drive.steering_angle = 0.34 # probably the max steering angle
+        # elif self.relative_x == -100000 or self.relative_y == -100000: # if we cant see cone, assuming relative pos are None
+        #     # move in a circle 
+        #     rospy.loginfo("move in a circle")
+        #     drive_cmd.drive.speed = 1
+        #     drive_cmd.drive.steering_angle = 0.34 # probably the max steering angle
 
-        elif distance_to_cone < self.starting_buffer: # check if within desired distance, back up if not 
-            rospy.loginfo("Within desired distance of cone, backing up")
-            drive_cmd.drive.speed = -1
-            drive_cmd.drive.steering_angle = 0
+        # elif distance_to_cone < self.starting_buffer: # check if within desired distance, back up if not 
+        #     rospy.loginfo("Within desired distance of cone, backing up")
+        #     drive_cmd.drive.speed = -1
+        #     drive_cmd.drive.steering_angle = 0
         
         else:
             rospy.loginfo("PURE PURSUIT")
