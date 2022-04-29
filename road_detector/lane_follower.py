@@ -15,7 +15,6 @@ class LaneFollower():
     def __init__(self):
         rospy.Subscriber("/relative_lane_lines", LaneLines, self.lane_callback)
 
-        # DRIVE_TOPIC = rospy.get_param("~drive_topic") # set in launch file; different for simulator vs racecar
         DRIVE_TOPIC = "/vesc/ackermann_cmd_mux/input/navigation"
         self.drive_pub = rospy.Publisher(DRIVE_TOPIC,
             AckermannDriveStamped, queue_size=10)
@@ -30,6 +29,7 @@ class LaneFollower():
         self.follow_buffer = 0.8  # within buffer we want to brake
         self.starting_buffer = self.follow_buffer
  
+        self.previous_angle = 0
         self.steering_angle = 0
         self.alpha = 0
         self.look_ahead_distance = 0
@@ -44,26 +44,8 @@ class LaneFollower():
 
         drive_cmd = AckermannDriveStamped()
         relative_angle = np.arctan2(self.relative_x, self.relative_y)
-        # rospy.loginfo(relative_angle)
+
         distance_to_cone = np.sqrt(self.relative_x**2 + self.relative_y**2)
-	    # rospy.loginfo("Distance to cone: %f", distance_to_cone)
-        # if(0.5 <= distance_to_cone <= 0.8 and -self.error_tolerance*2*np.pi/360 <= relative_angle <= self.error_tolerance*2*np.pi/360):
-        #     rospy.loginfo("Complete!")
-            # drive_cmd.drive.speed = 0
-        # if(-np.pi/4 <= relative_angle <= np.pi/4):
-        #     self.relative_x=None
-        #     self.relative_y=None
-
-        # elif self.relative_x == -100000 or self.relative_y == -100000: # if we cant see cone, assuming relative pos are None
-        #     # move in a circle 
-        #     rospy.loginfo("move in a circle")
-        #     drive_cmd.drive.speed = 1
-        #     drive_cmd.drive.steering_angle = 0.34 # probably the max steering angle
-
-        # elif distance_to_cone < self.starting_buffer: # check if within desired distance, back up if not 
-        #     rospy.loginfo("Within desired distance of cone, backing up")
-        #     drive_cmd.drive.speed = -1
-        #     drive_cmd.drive.steering_angle = 0
         
         rospy.loginfo("PURE PURSUIT")
         # pure pursuit controller 
@@ -74,11 +56,7 @@ class LaneFollower():
         rospy.loginfo(alpha)
         drive_cmd.drive.steering_angle = np.arctan2(2 * self.car_length * np.sin(alpha), distance_to_cone)
        
-        # drive_cmd.drive.steering_angle_velocity = 0
-        # drive_cmd.drive.acceleration = 0
-        # drive_cmd.drive.jerk = 0
         self.drive_pub.publish(drive_cmd)
-        # self.rate.sleep()
 
     # def error_publisher(self):
     #     """
