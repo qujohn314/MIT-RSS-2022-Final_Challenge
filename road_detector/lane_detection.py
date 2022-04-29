@@ -159,7 +159,6 @@ class LaneDetector():
 
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            rospy.loginfo(self.calculate_slope(l))
             if 0.8 > self.calculate_slope(l) > 0.3:
                 left_lanes.append(l)
                 cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
@@ -169,6 +168,7 @@ class LaneDetector():
                 cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
 
         left_lane = np.average(np.array(left_lanes), axis=0).astype(int)
+        rospy.loginfo(left_lane)
         cv2.line(cdstP, (left_lane[0], left_lane[1]), (left_lane[2], left_lane[3]), (0,255,0), 3, cv2.LINE_AA)
         right_lane = np.average(np.array(right_lanes), axis=0).astype(int)
         cv2.line(cdstP, (right_lane[0], right_lane[1]), (right_lane[2], right_lane[3]), (0,255,0), 3, cv2.LINE_AA)
