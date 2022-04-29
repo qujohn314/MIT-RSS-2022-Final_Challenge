@@ -52,7 +52,6 @@ class StateMachine:
                 time.sleep(2)
                 return 
             cmd = self.parking_cmd
-
         elif self.state == State.STOPPED:
             cmd = AckermannDriveStamped()
             cmd.header.stamp = rospy.Time.now()
