@@ -40,13 +40,13 @@ class StateMachine:
         pass 
         
     def run(self):
-        if self.state = State.DRIVING:
+        if self.state == State.DRIVING:
             if self.parking_cmd == None:
                 rospy.loginfo("Waiting for command from parking controller ... ")
                 time.sleep(2)
                 return 
             cmd = self.parking_cmd
-        elif self.state = State.STOPPED:
+        elif self.state == State.STOPPED:
             cmd = AckermannDriveStamped()
             cmd.header.stamp = rospy.Time.now()
             cmd.header.frame_id = "base_link"
@@ -56,7 +56,7 @@ class StateMachine:
             # cmd.drive.jerk = 0
             self.last_stop_time = cmd.header.stamp
 
-        elif self.state = State.CAR_WASH:
+        elif self.state == State.CAR_WASH:
             return 
 
         
