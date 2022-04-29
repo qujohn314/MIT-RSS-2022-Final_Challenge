@@ -33,11 +33,11 @@ class HomographyTransformer():
 
          #Initialize data into a homography matrix
 
-        np_pts_ground = np.array(PTS_GROUND_PLANE)
-        np_pts_ground = np_pts_ground * METERS_PER_INCH
+        np_pts_ground = np.array(self.PTS_GROUND_PLANE)
+        np_pts_ground = np_pts_ground * self.METERS_PER_INCH
         np_pts_ground = np.float32(np_pts_ground[:, np.newaxis, :])
 
-        np_pts_image = np.array(PTS_IMAGE_PLANE)
+        np_pts_image = np.array(self.PTS_IMAGE_PLANE)
         np_pts_image = np_pts_image * 1.0
         np_pts_image = np.float32(np_pts_image[:, np.newaxis, :])
 
@@ -157,29 +157,31 @@ class LaneDetector():
         right_lanes = []
         left_lanes = []
 
+        # slopes = np.array(list(map(self.calculate_slope, linesP[:, 0])))
+        # np.array
+
         for i in range(0, len(linesP)):
             l = linesP[i][0]
             if 0.8 > self.calculate_slope(l) > 0.3:
                 left_lanes.append(l)
-                cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+                # cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
             
             if -0.8 < self.calculate_slope(l) < -0.3: 
                 right_lanes.append(l)
-                cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
+                # cv2.line(cdstP, (l[0], l[1]), (l[2], l[3]), (0,0,255), 3, cv2.LINE_AA)
 
         left_lane = np.average(np.array(left_lanes), axis=0).astype(int)
-        rospy.loginfo(left_lane)
-        cv2.line(cdstP, (left_lane[0], left_lane[1]), (left_lane[2], left_lane[3]), (0,255,0), 3, cv2.LINE_AA)
+        # cv2.line(cdstP, (left_lane[0], left_lane[1]), (left_lane[2], left_lane[3]), (0,255,0), 3, cv2.LINE_AA)
         right_lane = np.average(np.array(right_lanes), axis=0).astype(int)
-        cv2.line(cdstP, (right_lane[0], right_lane[1]), (right_lane[2], right_lane[3]), (0,255,0), 3, cv2.LINE_AA)
+        # cv2.line(cdstP, (right_lane[0], right_lane[1]), (right_lane[2], right_lane[3]), (0,255,0), 3, cv2.LINE_AA)
 
 
         center_x, center_y = self.get_center_point(left_lane, right_lane)
         # rospy.loginfo((center_x, center_y))
         cv2.circle(cdstP, (center_x, center_y), 20, (255,0,0), -1)
 
-        debug_msg = self.bridge.cv2_to_imgmsg(cdstP, "passthrough")
-        self.debug_pub.publish(debug_msg)
+        # debug_msg = self.bridge.cv2_to_imgmsg(cdstP, "passthrough")
+        # self.debug_pub.publish(debug_msg)
 
         # convert to ground plane
         transform = HomographyTransformer()
