@@ -34,20 +34,21 @@ class LaneFollower():
         self.alpha = 0
         self.look_ahead_distance = 0
         self.error_tolerance = 3  # degrees
+        self.rate = rospy.Rate(10) #hz
 
         self.successful_run = False
 
     def lane_callback(self, msg):
-        self.relative_x = msg.x1 + 0.26
+        self.relative_x = msg.x1 # + 0.26
         self.relative_y = msg.y1
 
         drive_cmd = AckermannDriveStamped()
-        relative_angle = np.arctan2(self.relative_y, self.relative_x)
+        relative_angle = np.arctan2(self.relative_x, self.relative_y)
         # rospy.loginfo(relative_angle)
         distance_to_cone = np.sqrt(self.relative_x**2 + self.relative_y**2)
 	    # rospy.loginfo("Distance to cone: %f", distance_to_cone)
-        if(0.5 <= distance_to_cone <= 0.8 and -self.error_tolerance*2*np.pi/360 <= relative_angle <= self.error_tolerance*2*np.pi/360):
-            rospy.loginfo("Complete!")
+        # if(0.5 <= distance_to_cone <= 0.8 and -self.error_tolerance*2*np.pi/360 <= relative_angle <= self.error_tolerance*2*np.pi/360):
+        #     rospy.loginfo("Complete!")
             # drive_cmd.drive.speed = 0
         # if(-np.pi/4 <= relative_angle <= np.pi/4):
         #     self.relative_x=None
@@ -64,17 +65,20 @@ class LaneFollower():
         #     drive_cmd.drive.speed = -1
         #     drive_cmd.drive.steering_angle = 0
         
-        else:
-            rospy.loginfo("PURE PURSUIT")
-            # pure pursuit controller 
-            drive_cmd.drive.speed = 1  # limit below 1 m/s for velocity
-            alpha = np.arctan2(self.relative_y, self.relative_x)
-            drive_cmd.drive.steering_angle = np.arctan2(2 * self.car_length * np.sin(alpha), distance_to_cone)
+        rospy.loginfo("PURE PURSUIT")
+        # pure pursuit controller 
+        drive_cmd.drive.speed = 1  # limit below 1 m/s for velocity
+        alpha = np.arctan2(self.relative_y, self.relative_x)
+        rospy.loginfo(drive_cmd.drive.speed)
+        rospy.loginfo("ALPHA -------------------")
+        rospy.loginfo(alpha)
+        drive_cmd.drive.steering_angle = np.arctan2(2 * self.car_length * np.sin(alpha), distance_to_cone)
        
         # drive_cmd.drive.steering_angle_velocity = 0
         # drive_cmd.drive.acceleration = 0
         # drive_cmd.drive.jerk = 0
         self.drive_pub.publish(drive_cmd)
+        # self.rate.sleep()
 
     # def error_publisher(self):
     #     """
