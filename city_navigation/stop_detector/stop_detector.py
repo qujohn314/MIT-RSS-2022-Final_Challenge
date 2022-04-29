@@ -1,7 +1,11 @@
 import cv2
 import rospy
+import sys
+#Get path to stop_sign_detector ML class
+sys.path.append("/home/racecar/racecar_ws/src/stop_sign_detector")
 
 import numpy as np
+
 from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 
@@ -34,7 +38,11 @@ class SignDetector:
         rgb_img = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
 
         bounding_box = self.detector.predict(rgb_img)
+<<<<<<< HEAD:city_driving/stop_detector/stop_detector.py
         if not (bounding_box == None): 
+=======
+        if bounding_box is not None: 
+>>>>>>> eed247a9c471729e48cb7f4bdbea9f447c63a277:city_navigation/stop_detector/stop_detector.py
             # calculated distance to the stop sign, if within stopping distance publish bool command
             xmin, ymin, xmax, ymax = bounding_box
             sign_height = ymax - ymin
@@ -44,9 +52,13 @@ class SignDetector:
             # FOR NOW: distance from the robot's camera is the x value 
             if x > self.stopping_distance + self.stopping_buffer:
                 ret.data = True 
+<<<<<<< HEAD:city_driving/stop_detector/stop_detector.py
             # could use depth instead, apparently depth cam is flaky
 
             # if this doesn't work, use the sign's height and test 
+=======
+        self.publisher.publish(ret)
+>>>>>>> eed247a9c471729e48cb7f4bdbea9f447c63a277:city_navigation/stop_detector/stop_detector.py
 
 if __name__=="__main__":
     rospy.init_node("stop_sign_detector")

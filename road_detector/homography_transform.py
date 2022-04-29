@@ -8,9 +8,9 @@ from cv_bridge import CvBridge, CvBridgeError
 
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
-from ackermann_msgs.msg import AckermannDriveStamped
+# from ackermann_msgs.msg import AckermannDriveStamped
 from visualization_msgs.msg import Marker
-from visual_servoing.msg import ConeLocation, ConeLocationPixel
+from city_driving.msg import LaneLocation, LaneLines #add to CMake!!
 
 #The following collection of pixel locations and corresponding relative
 #ground plane locations are used to compute our homography matrix
@@ -42,10 +42,10 @@ METERS_PER_INCH = 0.0254
 # TODO: need to change this code to be compatible with lane following 
 class HomographyTransformer:
     def __init__(self):
-        self.cone_px_sub = rospy.Subscriber("/relative_cone_px", ConeLocationPixel, self.cone_detection_callback)
-        self.cone_pub = rospy.Publisher("/relative_cone", ConeLocation, queue_size=10)
+        self.cone_px_sub = rospy.Subscriber("/relative_lane_lines", LaneLines, self.lane_detection_callback)
+        self.lane_pub = rospy.Publisher("/ground_lane_lines", LaneLocation, queue_size=10)
 
-        self.marker_pub = rospy.Publisher("/cone_marker",
+        self.marker_pub = rospy.Publisher("/lane_endpoints_marker",
             Marker, queue_size=1)
 
         if not len(PTS_GROUND_PLANE) == len(PTS_IMAGE_PLANE):
@@ -63,23 +63,30 @@ class HomographyTransformer:
 
         self.h, err = cv2.findHomography(np_pts_image, np_pts_ground)
 
-    def cone_detection_callback(self, msg):
+    def lane_detection_callback(self, msg):
         #Extract information from message
-        u = msg.u
-        v = msg.v
-	    relative_xy_msg = ConeLocation()
+        x1 = msg.x1
+        y1 = msg.y1
+        x2 = msg.x2
+        y2 = msg.y2
+	    relative_xy_msg = LaneLocation()
 	    if u == -100000 and v == -100000:
-            relative_xy_msg.x_pos = -100000
-            relative_xy_msg.y_pos = -100000
+            relative_xy_msg.x1_pos = -100000
+            relative_xy_msg.y1_pos = -100000
+            relative_xy_msg.x2_pos = -100000
+            relative_xy_msg.y2_pos = -100000
         else:
         	#Call to main function
-        	x, y = self.transformUvToXy(u, v)
+        	x1_ground, y1_ground = self.transformUvToXy(x1, y1)
+            x2_ground, y2_ground = self.transformUvToXy(x2, y2)
 
         	#Publish relative xy position of object in real world
-        	relative_xy_msg.x_pos = x
-        	relative_xy_msg.y_pos = y
+        	relative_xy_msg.x1_pos = x1_ground
+        	relative_xy_msg.y1_pos = y1_ground
+            relative_xy_msg.x2_pos = x2_ground
+        	relative_xy_msg.y2_pos = y2_ground
 
-        self.cone_pub.publish(relative_xy_msg)
+        self.lane_pub.publish(relative_xy_msg)
 
 
     def transformUvToXy(self, u, v):
