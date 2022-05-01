@@ -13,7 +13,7 @@
   </node>
 
   <node pkg="city_driving" name="state_machine" type="state_machine.py" output="screen">
-    	<param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
+  <param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
   </node>
 
   <node pkg="visual_servoing" name="cone_detector" type="cone_detector.py" output="screen">
