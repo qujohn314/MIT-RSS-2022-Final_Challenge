@@ -2,8 +2,6 @@ from PIL import Image
 from matplotlib import pyplot as plt
 import numpy as np
 
-# TODO: Modify the patch height and width
-patch_H, patch_W = None, None
 # TODO: Modify the path to model weights
 path_to_model_weights = "/path/to/model/weights.pth"
 

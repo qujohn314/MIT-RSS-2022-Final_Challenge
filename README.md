@@ -1,9 +1,10 @@
 | Deliverable | Due Date              |
 |---------------|----------------------------------------------------------------------------|
-| Race Day | TBA |
-| Code Pushed to Github  | TBA |
-| Briefing (15 min presentation + 5 min Q&A) OR Report ([github pages](https://github.mit.edu/rss/website2021)) | TBA |
-| [Team Member Assessment](https://forms.gle/5npgrmk8mjdRGGcL7)  | TBA|
+| Race Day - Dry Run | Friday, April 29th 10AM-1PM EST |
+| Race Day | Friday, May 6th 10AM-1PM EST |
+| Code Pushed to Github  | Friday, May 6th 1PM EST |
+| Briefing (15 min presentation + 5 min Q&A) OR Report ([github pages](https://github.mit.edu/rss/website2021)) | Wednesday, May 4th at 1:00PM EST (presentation time TBA) |
+| [Team Member Assessment](https://forms.gle/5npgrmk8mjdRGGcL7)  | Wednesday, May 4th at 1:00PM EST |
 
 # Final Challenge 2022
 
@@ -59,7 +60,7 @@ Where `staff_multiplier` is a calibrating constant based off of the staff soluti
 
 `penalties = 5 * num_collisions + 10 * traffic_infractions + 10 * manual_assist`
 
-And `num_collisions` is the number of times the car collides with anything in the city (ie. buildings, bricks, road signs), `traffic_infractions` is the number of times the car passes a stop sign without stopping for the correct duration or stops at a non-stop sign, and `manual_assist` is the number of maneuvers (counted individually for turning a corner, stopping at a stop sign, resetting a car, etc.) that required manual teleop intervention.
+And `num_collisions` is the number of times the car collides with anything in the city (ie. buildings, bricks, road signs), `traffic_infractions` is the number of times the car passes a stop sign without coming to a full stop or stops at a non-stop sign, and `manual_assist` is the number of maneuvers (counted individually for turning a corner, stopping at a stop sign, resetting a car, etc.) that required manual teleop intervention.
 
 As with Part A, it is possible to receive bonus points for a fast implementation, yet it is important to prioritize the accuracy of the maneuvers. The **maximum speed of your car should be 1 m/s**. However, operating at maximum speed for your entire run will be very challenging for this task. You should start slow and conduct tests to select an appropriate target speed for your car. To receive full credit over this ~15 meter course, you will need to cover an average of around .5 m/s (but this value will be calibrated by our staff solution completion speed).
 
@@ -181,20 +182,19 @@ Lucky for you, your car has been in this treacherous flower field before, and, i
 
 For this task, you will design and train your very own simple neural network to help identify the road. To do this, you will do the following high-level steps:
 
-- Drive around the Marigold Karpet track, recording your car's camera feed in a rosbag.
-- Extract a bunch of individual images from the rosbag.
-- Annotate each of the images, clicking a polygonal bounding box to segment out the road.
-  - This breaks up the image into patches or gridcells of a specified size. Any patch within the polygon you specify will be considered "road," all others are not.
-  - The annotations are saved as numpy arrays of size `[height of image // height of patch, width of image // width of patch]`, representing binary masks where `1`s denote road.
+- Drive around the Marigold Karpet track, recording your car's camera feed in a rosbag
+- Extract a bunch of individual images from the rosbag
+- Annotate each of the images, clicking a polygonal bounding box to segment out the road
+  - This marks pixels inside the polygon as "road" and outside as not
+  - The annotations are saved as numpy arrays of size `[height of image, width of image]`, representing binary masks where `1`s denote road
 - Upload your images and corresponding annotations to Google Drive
-- Fill in a neural network architecture in a given Colab notebook
-  - The neural network breaks the image into patches (as the annotation code does) and, for each patch, predicts whether it is road or not. This gives a low-resolution road
-  segmentation that can be used for path following.
+- Run the neural network code in the Colab notebook
+  - The neural network breaks the image into patches (as the annotation code does) and, for each patch, predicts whether it is road or not
 - Tune the hyperparameters of the neural network
 - Train and re-tune as needed
 - Download the saved weights of the neural network onto your car
-- Run the inference-time code to load up the weights, subscribe to your camera, and output a binary mask of where the road is.
-- Use this for line-following.
+- Run the inference-time code to load up the weights, subscribe to your camera, and output a binary mask of where the road is
+- Use this for line-following
 
 ### Specific Task Instructions
 Assuming you are in the `road_detector` directory:
@@ -211,20 +211,25 @@ Assuming you are in the `road_detector` directory:
 
 You've now extracted the images. On to annotations:
 
-* Modify `__utils__.py` to have the desired patch size (`H`, `W`).
 * Run `python3 annotate_imgs.py --path [path to images to annotate = ./images] --results [path to folder where annotations are saved = ./results]`
-    * Click on `n = 10` points bounding the road to create a polygon around it, thus marking all patches in those as ones on the road. Then, close the window to move on to the next image. You may need to close out a tiny menu window between images too.
+    * Click on `n = 10` points bounding the road to create a polygon around it, marking all pixels in the polygon as ones on the road. Then, close the window to move on to the next image. You may need to close out a tiny menu window between images too.
     * This can be run in Docker, but requires a bit of setup. First, `sudo apt install python3-pip python3-tk`. Then, `pip3 install matplotlib pillow Shapely`, and any other library that isn't already installed / throws an error.
 
-Now, time to build your neural net and train:
+Now, time to train:
 
-* Upload a copy of `final-challenge-ml-folder` to Google Drive.
-* Upload the contents of `images`, `testimages`, `results` to the corresponding Google Drive folders within `final-challenge-ml-folder`.
-* Fill out the TODOs in `TrainNotebook.ipynb`
-* Run all the cells to train. This saves the checkpoints to `checkpoints` folder in your Drive.
+* Make a personal copy of this folder in your Drive: https://drive.google.com/drive/folders/1VvM8y3EJmz2w6M_RxiWhQ05bks_Wybt8?usp=sharing. 
+    * Do _NOT_ work directly in this folder! MAKE A COPY OF IT FOR YOUR TEAM!
+* Upload the _local_ contents of `images`, `testimages`, `results` to the corresponding Google Drive folders within your team's `final-challenge-ml-folder`.
+* Run all the cells in `TrainNotebook.ipynb` to train. This saves the checkpoints to `checkpoints` folder in your Drive.
+    * You will need to change some of the paths for the code to work in your Google Drive directory structure -- see the TODOs in the notebook.
+    * You can tune the neural network as you like, though this is optional
+* If your team would like to, you can make a subdirectory inside the _shared_ `final-challenge-ml-folder/images` and `final-challenge-ml-folder/results` to upload some of your annotated training data to (images and `.npy` file masks)
+    * Please be sure to create the subdirectory and name it after your team. Do NOT upload images and annotations directly to `images` and `results`, since they might have the same name as files uploaded by some other team. We have created a subdirectory already called Team 0 as an example.
 
 Finally, on to deployment of the neural net: 
+
 * Download whatever weights you saved in `checkpoints` that you would like on the real car.
+   * The notebook loads whichever weights had the lowest validation loss, see the line that says `checkpoint_names[lowest_val]` for more details. `checkpoint_names[lowest_val]` contains the names of that weight file with the lowest validation loss
 * Modify `path_to_model_weights` in `__utils__.py` to point to that weights file.
 * Copy-paste your model architecture from the Colab notebook into `model.py`.
 * Copy the `road_detector` file over to a Razer computer (omitting the rosbag and any training/test data/other images, but including all code and the network weights).
@@ -266,7 +271,7 @@ In previous labs, the racecar was throttled to a default maximum speed of 2 m/s.
 
 These speeds are measured in ERPM. The conversion factor is 4614 ERPM per m/s (this is a parameter at the top of the file). The hardware limit is ~20000 ERPM. *This should be the maximum value you set in `vesc.yaml`*.
 
-Note that this does not change the max speed of the joystick. If you want the joystick to command a higher speed change the scale parameter for drive.speed in this file: https://github.com/mit-racecar/racecar/blob/master/racecar/config/racecar-v2/joy_teleop.yaml. The scale parameter multiples the joystick output which is in the range [−1,1] to produce a speed.
+Note that this does not change the max speed of the joystick. If you want the joystick to command a higher speed change the scale parameter for drive.speed in this file: https://github.com/mit-racecar/racecar/blob/master/racecar/config/racecar-v2/joy_teleop.yaml. The scale parameter multiples the joystick output which is in the range [−1,1] to produce a speed.
 
 ### Machine Learning Integration
 
@@ -290,8 +295,25 @@ At present, running the machine learning models for the final challenge will nee
 *How many stop signs will there be on race day?* 
 * Three.
 
+*How far should the car stop before the stop sign?*
+* The front of your car must stop between .75-1 meters in front of the stop sign to receive credit for the stop. On race day, there will be tape on the ground so we can check if your car has stopped at the correct distance. Stop signs will all be the same size as the ones at lab. They will always be perpendicular to the road and not visible from other sections of the city.
+
+*How long does the car need to stop for?*
+* There is no time requirement, but your car must come to a **full stop** (no California stops!).
+
 *Is it possible to avoid going through the car wash?*
-* Yes, there will be an alternate route that is slightly longer
+* Yes, there will be an alternate route that is slightly longer.
+
+*How are the roads marked? What should the car do at intersections?*
+* The road will be marked with orange tape (we have rolls of tape you will be able to use). There will be no intersections marked with orange tape; there will be one continuous orange path through the mini city. There will be one turn off of the main road for teams choosing to go through the car wash. You will be able to see the blue car wash from the main orange road.
+
+*How should we navigate through the car wash?*
+* The car wash will be the only blue object in the mini-city. There will be buildings lining the road along the path to the car wash and leading out of it. Idea: try wall-following after you've driven through the front to get through the car wash and go through it! Note that your car's lidar will get tricked by the dangling blue strips... The car wash side street will meet up with the orange path; you should begin following the orange path in the direction that results in the lesser turn angle for your car.
+
+*Will there be anything else in the city besides buildings, orange road markers, stop signs, and the car wash?*
+* Yes! There will be red distractor bricks, distractor signs, etc... Your car should ignore all of these extra items!
+
+*Will we have a map of the city?*
+* No map! You should be able to navigate through without knowing what the city looks like beforehand.
 
 ### Part C: Rainbow Road Challenge
-

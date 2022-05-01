@@ -88,13 +88,6 @@ def annotate_img(img_path, dims, use_patch_size=True, num_points=8):
                 mask[i, j] = 1
 
     inside_pts = np.array(inside_pts).T
-
-    # Plot all the grid cell centers inside the bounding polygon
-    plt.scatter(inside_pts[0],
-                inside_pts[1],
-                c=[[.5, 0, .5, .4]],
-                s=15,
-                marker="+")
     plt.show()
 
     return mask
@@ -109,7 +102,7 @@ if __name__ == "__main__":
     assert os.path.isdir(args.results)
 
     if os.path.isfile(args.path):
-        mask = annotate_img(args.path, (patch_H, patch_W), num_points=num_points)
+        mask = annotate_img(args.path, (1, 1), num_points=num_points)
         # get filename without extension
         file_name = os.path.split(args.path).split(".")[0]
         result_path = os.path.join(args.results, file_name + ".npy")
@@ -118,7 +111,7 @@ if __name__ == "__main__":
         for file in os.listdir(args.path):
             file_path = os.path.join(args.path, file)
             assert os.path.isfile(file_path)
-            mask = annotate_img(file_path, (patch_H, patch_W), num_points=num_points)
+            mask = annotate_img(file_path, (1, 1), num_points=num_points)
             file_name = file.split(".")[0]
             result_path = os.path.join(args.results, file_name + ".npy")
             np.save(result_path, mask)

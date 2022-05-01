@@ -21,6 +21,7 @@ class StateMachine:
         self.parking_controller_subscriber = rospy.Subscriber("/parking_controller_drive_cmd", AckermannDriveStamped, self.parking_callback)
         self.drive_pub = rospy.Publisher(DRIVE_TOPIC, AckermannDriveStamped, queue_size=10)
         self.stop_sub = rospy.Subscriber("/should_stop", Bool, self.stop_callback)
+        self.car_wash_sub = rospy.Subscriber("/TO-DO", Bool, self.car_wash_callback)
         self.parking_cmd = None
         self.state = State.DRIVING
         self.last_stop_time = None
@@ -30,7 +31,7 @@ class StateMachine:
     def stop_callback(self, msg):
         now = rospy.Time.now()
 
-        # if stop sign is close and the last time we stopped was over a second ago 
+        # if stop sign is in range and the last time we stopped was over a second ago 
         if msg.data and (self.last_stop_time == None or now - self.last_stop_time > rospy.Duration(1)):
             self.state = State.STOPPED 
             self.last_stop_time = now
