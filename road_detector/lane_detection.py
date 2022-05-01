@@ -131,7 +131,7 @@ class LaneDetector():
         # _, center_y = self.midpoint(center_left[0], center_left[1], center_right[0], center_right[1])
         # print(center_y)
 
-        return (int(center_x)+20, 210) #DEBUGING
+        return (int(center_x)+20, 230) #DEBUGING
 
 
     def get_hough_lines(self, image):

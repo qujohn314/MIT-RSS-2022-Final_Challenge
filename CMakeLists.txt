@@ -55,9 +55,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## =======
  add_message_files(
    FILES
-   ## ConeLocationPixel.msg
-   ## ConeLocation.msg
-   ## ParkingError.msg
+   CarWashLocation.msg
+   CarWashPixel.msg
    LaneLines.msg
 )
 

@@ -9,18 +9,24 @@
   <param name="drive_topic" value="/parking_controller_drive_cmd" />
   </node>
 
-  <node pkg="city_driving" name="stop_sign_detector" type="stop_detector.py" output="screen">
-  </node>
-
-  <node pkg="city_driving" name="state_machine" type="state_machine.py" output="screen">
-  <param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
-  </node>
-
   <node pkg="visual_servoing" name="cone_detector" type="cone_detector.py" output="screen">
   </node>
 
+
   <node pkg="visual_servoing" name="homography_transformer" type="homography_transformer.py" output="screen">
   </node>
+
+
+  <node pkg="city_driving" name="stop_detector_listener" type="stop_detector.py" output="screen">
+  </node>
+
+  <node pkg="city_driving" name="car_wash_detector" type="car_wash_detector.py" output="screen">
+  </node>
+
+  <node pkg="city_driving" name="state_machine" type="state_machine.py" output="screen">
+    	<param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
+  </node>
+
 
   <node pkg="image_transport" name="republish" type="republish" args="raw in:=/cone_debug_img out:=/cone_debug_img_compressed" output="screen"></node>
 
