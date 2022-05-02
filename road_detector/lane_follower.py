@@ -49,12 +49,12 @@ class LaneFollower():
         
         rospy.loginfo("PURE PURSUIT")
         # pure pursuit controller 
-        drive_cmd.drive.speed = 1  # limit below 1 m/s for velocity
+        drive_cmd.drive.speed = 3  # limit below 1 m/s for velocity
         alpha = np.arctan2(self.relative_y, self.relative_x)
         rospy.loginfo(drive_cmd.drive.speed)
         rospy.loginfo("ALPHA -------------------")
         rospy.loginfo(alpha)
-        drive_cmd.drive.steering_angle = np.arctan2(2 * self.car_length * np.sin(alpha), distance_to_cone)
+        drive_cmd.drive.steering_angle = 0.5*np.arctan2(2 * self.car_length * np.sin(alpha), distance_to_cone)
        
         self.drive_pub.publish(drive_cmd)
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import numpy as np
 import rospy
 
@@ -23,7 +22,7 @@ class CarWashDetector():
     """
     def __init__(self):
         # Subscribe to ZED camera RGB frames
-        self.car_wash_pub = rospy.Publisher("/relative_car_wash_px", ConeWashPixel, queue_size=10)
+        self.car_wash_pub = rospy.Publisher("/relative_car_wash_px", CarWashPixel, queue_size=10)
         self.debug_pub = rospy.Publisher("/car_wash_debug_img", Image, queue_size=10)
         self.image_sub = rospy.Subscriber("/zed/zed_node/rgb/image_rect_color", Image, self.image_callback)
         self.bridge = CvBridge() # Converts between ROS images and OpenCV Images
@@ -47,16 +46,22 @@ class CarWashDetector():
 
         debug_msg = self.bridge.cv2_to_imgmsg(image, "bgr8")
 
-        #Change HSV ranges to match blue of car wash
-        cone_bounding_box = cd_color_segmentation(image,image_format=1,low_range=[0,0,0],high_range=[0,0,0])
-        x1 = cone_bounding_box[0][0]
-        y1 = cone_bounding_box[0][1]
-        x2 = cone_bounding_box[1][0]
-        y2 = cone_bounding_box[1][1]
 
-        pixel_msg = ConeLocationPixel()
-        pixel_msg.u = x1 + (x2-x1)/2
-        pixel_msg.v = y2
+        #Change HSV ranges to match blue of car wash
+        car_wash_bounding_box = cd_color_segmentation(image,image_format=1,low_range=[0,0,0],high_range=[0,0,0])
+        pixel_msg = CarWashPixel()
+
+        if not car_wash_bounding_box:
+            # rospy.loginfo("No car wash detected")
+            pixel_msg.u = -100000
+            pixel_msg.v = -100000
+        else:
+            x1 = cone_bounding_box[0][0]
+            y1 = cone_bounding_box[0][1]
+            x2 = cone_bounding_box[1][0]
+            y2 = cone_bounding_box[1][1]
+            pixel_msg.u = x1 + (x2-x1)/2
+            pixel_msg.v = y2
 
         self.debug_pub.publish(debug_msg)
         self.car_wash_pub(pixel_msg)
