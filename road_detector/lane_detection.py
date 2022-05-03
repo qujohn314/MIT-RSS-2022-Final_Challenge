@@ -124,14 +124,19 @@ class LaneDetector():
     def get_center_point(self, left_lane, right_lane):
         left_lane_equation = self.line((left_lane[0], left_lane[1]), (left_lane[2], left_lane[3]))
         right_lane_equation = self.line((right_lane[0], right_lane[1]), (right_lane[2], right_lane[3]))
-        center_x, _ = self.intersection(left_lane_equation, right_lane_equation)
-
+        if self.intersection(left_lane_equation, right_lane_equation):
+            center_x, _ = self.midpoint(left_lane[0], left_lane[1], left_lane[2], left_lane[3]) 
+            center_x +=  self.midpoint(right_lane[0], right_lane[1], right_lane[2], right_lane[3])[0]
+            center_x = center_x/2
+            # center_x, _ = self.intersection(left_lane_equation, right_lane_equation)
+        else:
+            center_x, _ = self.midpoint(left_lane[0], left_lane[1], left_lane[2], left_lane[3]) - 10
         # center_left = self.midpoint(left_lane[0], left_lane[1], left_lane[2], left_lane[3])
         # center_right = self.midpoint(right_lane[0], right_lane[1], right_lane[2], right_lane[3])
         # _, center_y = self.midpoint(center_left[0], center_left[1], center_right[0], center_right[1])
         # print(center_y)
 
-        return (int(center_x), 200) #DEBUGING
+        return (int(center_x), 200) #DEBUGGING
 
 
     def get_hough_lines(self, image):
@@ -145,7 +150,7 @@ class LaneDetector():
             linesP (numpy array) - array of lines found in form of (x1, y1, x2, y2)
         """
         # Create mask
-        lower = np.array([180, 180, 180], dtype="uint8")
+        lower = np.array([200, 200, 200], dtype="uint8")
         upper = np.array([255, 255, 255], dtype="uint8")
         mask = cv2.inRange(image, lower, upper)
         masked = cv2. bitwise_and(image, image, mask = mask)
@@ -195,6 +200,11 @@ class LaneDetector():
                 right_lanes.append(l)
                 cv2.line(src, (l[0]+self.horizontal_crop, l[1]+self.vertical_crop), 
                 (l[2]+self.horizontal_crop, l[3]+self.vertical_crop), (0,0,255), 3, cv2.LINE_AA)
+
+        if left_lanes == []:
+            left_lanes = right_lanes
+        if right_lanes == []:
+            right_lanes = left_lanes
 
         left_lane = np.average(np.array(left_lanes), axis=0).astype(int)
         cv2.line(src, (left_lane[0]+self.horizontal_crop, left_lane[1]+self.vertical_crop), 
