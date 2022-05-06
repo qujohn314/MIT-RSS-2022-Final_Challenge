@@ -4,7 +4,7 @@ import rospy
 
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
-from computer_vision.color_segmentation import cd_color_segmentation
+from color_segmentation import cd_color_segmentation
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from city_driving.msg import CarWashPixel
@@ -13,7 +13,6 @@ from city_driving.msg import CarWashPixel
 #import sys
 #sys.path.append(path.abspath('../../'))
 
-from Project1.file1 import something
 class CarWashDetector():
     """
     A class for applying your cone detection algorithms to the real robot.
@@ -48,7 +47,8 @@ class CarWashDetector():
 
 
         #Change HSV ranges to match blue of car wash
-        car_wash_bounding_box = cd_color_segmentation(image,image_format=1,low_range=[0,0,0],high_range=[0,0,0])
+        #H(0-180) S(0-255) V(0-255)
+        car_wash_bounding_box = cd_color_segmentation(image,image_format=1,low_range=np.array([96,87,128]),high_range=np.array([132,255,255]))
         pixel_msg = CarWashPixel()
 
         if not car_wash_bounding_box:
@@ -56,15 +56,15 @@ class CarWashDetector():
             pixel_msg.u = -100000
             pixel_msg.v = -100000
         else:
-            x1 = cone_bounding_box[0][0]
-            y1 = cone_bounding_box[0][1]
-            x2 = cone_bounding_box[1][0]
-            y2 = cone_bounding_box[1][1]
+            x1 =  car_wash_bounding_box[0][0]
+            y1 =  car_wash_bounding_box[0][1]
+            x2 =  car_wash_bounding_box[1][0]
+            y2 =  car_wash_bounding_box[1][1]
             pixel_msg.u = x1 + (x2-x1)/2
             pixel_msg.v = y2
 
         self.debug_pub.publish(debug_msg)
-        self.car_wash_pub(pixel_msg)
+        self.car_wash_pub.publish(pixel_msg)
 
 
 if __name__ == '__main__':

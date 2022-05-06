@@ -2,8 +2,10 @@
 
   <!-- Launch the parking controller on the real robot. Launches safety controller, controller node, cone detection node, and the homography transformer -->
   <!-- Edit this to launch your safety controller you implemented in Lab 3! -->
+
+  <!--
   <node pkg="safety_controller" name="safety_controller" type="safety_controller.py" output="screen">
-  </node>
+  </node>-->
 
   <node pkg="visual_servoing" name="parking_controller" type="parking_controller.py" output="screen">
   <param name="drive_topic" value="/parking_controller_drive_cmd" />
@@ -20,10 +22,9 @@
   <node pkg="city_driving" name="stop_detector" type="stop_detector.py" output="screen">
   </node>
  
-<!--
   <node pkg="city_driving" name="car_wash_detector" type="car_wash_detector.py" output="screen">
   </node> 
--->
+
   <node pkg="city_driving" name="state_machine" type="state_machine.py" output="screen">
     	<param name="drive_topic" value="/vesc/ackermann_cmd_mux/input/navigation" />
   </node>

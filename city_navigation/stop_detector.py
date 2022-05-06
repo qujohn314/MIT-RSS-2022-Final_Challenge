@@ -15,7 +15,7 @@ from homography_transformer import HomographyTransformer
 
 class SignDetector:
     def __init__(self):
-        self.stopping_distance = 0.8 #Should stop between 0.75-1meter away
+        self.stopping_distance = 2.0 #Should stop between 0.75-1meter away
         self.stopping_buffer = 0 # if we need more of a buffer in order to stop 
         self.pole_sign_ratio = 1.1
         self.homography_transformer = HomographyTransformer()
@@ -33,6 +33,7 @@ class SignDetector:
 
         bounding_box = msg.data
         if bounding_box is not None and len(bounding_box) == 4: 
+            rospy.loginfo("ML sees a stop sign! Is it within range?")
             # calculated distance to the stop sign, if within stopping distance publish bool command
             xmin, ymin, xmax, ymax = bounding_box
             sign_height = ymax - ymin
@@ -41,9 +42,10 @@ class SignDetector:
             base_u = (xmax - xmin)//2
 
             x, y = self.homography_transformer.transformUvToXy(base_u, base_v)
-
+           
             # FOR NOW: distance from the robot's camera is the x value 
             if x <= self.stopping_distance + self.stopping_buffer:
+                rospy.loginfo("Stop sign is in range! " + str(x))
                 ret.data = True 
         self.publisher.publish(ret)
 
