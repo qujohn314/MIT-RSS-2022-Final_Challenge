@@ -14,6 +14,8 @@ class HomographyTransformer():
     """
     """
     def __init__(self):
+	self.catch = 1
+
         self.PTS_IMAGE_PLANE = [[260, 226],
                    [455, 242],
                    [174, 289],
@@ -71,13 +73,6 @@ class LaneDetector():
     Publishes to: /relative_lane_lines (LaneLines) : the coordinates of the line in the image frame (units are pixels).
     """
     def __init__(self):
-	self.catch = 1
-	self.current_left = 0
-	self.current_right = 0
-	self.previous_left = 0
-	self.previous_right = 0
-	self.diff_left = 0
-	self.prev_slope = 0
         self.vertical_crop = 200
         self.horizontal_crop = 0
         # toggle line follower vs cone parker
@@ -143,7 +138,7 @@ class LaneDetector():
         # _, center_y = self.midpoint(center_left[0], center_left[1], center_right[0], center_right[1])
         # print(center_y)
 
-        return (int(center_x) - 5, 200) #DEBUGGING
+        return (int(center_x), 200) #DEBUGGING
 
 
     def get_hough_lines(self, image):
@@ -198,34 +193,15 @@ class LaneDetector():
 
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            if self.calculate_slope(l) > 0.3:
+            if 0.8 > self.calculate_slope(l) > 0.3:
                 left_lanes.append(l)
                 cv2.line(src, (l[0]+self.horizontal_crop, l[1]+self.vertical_crop), 
                 (l[2]+self.horizontal_crop, l[3]+self.vertical_crop), (0,0,255), 3, cv2.LINE_AA)
-		self.current_left = self.calculate_slope(l)
-		if self.catch == 0:
-			self.previous_left = self.current_left
-			self.diff_left = self.current_left - self.previous_left
-			
             
-            if self.calculate_slope(l) < -0.3: 
+            if -0.8 < self.calculate_slope(l) < -0.3: 
                 right_lanes.append(l)
                 cv2.line(src, (l[0]+self.horizontal_crop, l[1]+self.vertical_crop), 
-                (l[2]+self.horizontal_crop, l[3]+self.vertical_crop), (0,0,255), 3, cv2.LINE_AA)
-		self.current_right = self.calculate_slope(l)
-		if self.catch == 0:
-			self.previous_right = self.current_right
-			diff = self.current_right - self.previous_right
-			if abs(diff) > 0.01:
-				right_lanes = left_lanes
-
-	
-	
-        if abs(self.diff_left) > 0.01:
-		left_lanes = right_lanes
-
-	self.catch = 0
-
+                (l[2]+self.horizontal_crop, l[3]+self.vertical_crop), (0,0,255), 3, cv2.LINE_AA)		self.catcj
         if left_lanes == []:
             left_lanes = right_lanes
         if right_lanes == []:
